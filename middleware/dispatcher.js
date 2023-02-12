@@ -1,8 +1,13 @@
-const { statusCodes, authHelper, ErrorHandler } = require("../helper");
+const {
+  statusCodes,
+  authHelper,
+  ErrorHandler,
+  casbinEnforcer,
+} = require("../helper");
 const { constant, camelize } = require("../utils");
 
-const { OK, BAD_GATEWAY } = statusCodes;
-const { SUCCESS } = constant;
+const { OK, UNAUTHORIZED } = statusCodes;
+const { SUCCESS, FAILURE } = constant;
 const { checkAuth, checkUserType } = authHelper;
 
 /**
@@ -14,25 +19,45 @@ const { checkAuth, checkUserType } = authHelper;
  * @param {*} res -> Express response object
  * @param {*} next -> Express middleware next function
  * @param {*} func -> Router controller function
- * @param {*} allowedUserAccess -> User who has access to the controller function
+ * @param resource -> Resource to Check Permission On
+ * @param {*} perm -> Permission to Check
  * @returns -> The final response with the data
  */
 
-const dispatcher = async (req, res, next, func, allowedUserAccess) => {
-	try {
-		const { user } = req;
-		if (allowedUserAccess) {
-			if (!Array.isArray(allowedUserAccess))
-				throw new ErrorHandler(BAD_GATEWAY, "allowedUserTypes should. be an array");
-			checkAuth(user);
-			checkUserType(user, allowedUserAccess);
-		}
+const dispatcher = async (req, res, next, func, resource, perm) => {
+  try {
+    const { user } = req;
+    if (perm) {
+      let enforcer = await casbinEnforcer;
+      const checkPerm = await enforcer.enforce(
+        user.userId,
+        resource,
+        perm,
+        user.role
+      );
 
-		const data = await func(req, res, next);
-		if (data != null) return res.status(OK).json({ status: SUCCESS, data: camelize(data) });
-	} catch (err) {
-		next(err);
-	}
+      if (!checkPerm) throw new ErrorHandler(UNAUTHORIZED, "Unauthorized");
+    }
+    const data = await func(req, res, next);
+    if (data != null) {
+      if (req.body && req.body.export) {
+        if (data.data) {
+          return res.xls(
+            req.body.fileName ? req.body.fileName : "report.xlsx",
+            data.data
+          );
+        } else {
+          return res.xls(
+            req.body.fileName ? req.body.fileName : "report.xlsx",
+            data
+          );
+        }
+      }
+      return res.status(OK).json({ status: SUCCESS, data: camelize(data) });
+    }
+  } catch (err) {
+    next(err);
+  }
 };
 
 module.exports = dispatcher;

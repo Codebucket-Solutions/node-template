@@ -4,6 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
+    "plop": "plop",
     "start_dev": "set NODE_ENV=development&&nodemon ./bin/www",
     "start_dev_server": "export NODE_ENV=devserver&&nodemon ./bin/www",
     "start_test": "set NODE_ENV=development&&pm2 start ./bin/www --name 'Template'",
@@ -26,6 +27,8 @@
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.1",
     "camelcase-keys": "^8.0.2",
+    "casbin": "^5.23.2",
+    "casbin-sequelize-adapter": "^2.4.0",
     "clamscan": "^2.1.2",
     "cls-hooked": "^4.2.2",
     "cors": "^2.8.5",
@@ -37,10 +40,14 @@
     "humps": "^2.0.1",
     "joi": "^17.7.0",
     "jsonwebtoken": "^9.0.0",
+    "moment-timezone": "^0.5.40",
     "morgan": "^1.10.0",
     "mysql2": "^3.1.0",
     "nodemailer": "^6.9.1",
     "sequelize": "^6.28.0",
     "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "plop": "^3.1.1"
   }
 }

@@ -27,6 +27,9 @@ module.exports = {
     FORGOT_PASSWORD: "FORGOT_PASSWORD",
     REGISTRATION_SUCCESS: "REGISTRATION_SUCCESS",
   },
+  RESOURCES: {
+    TEMP: "TEMP_RESOURCE",
+  },
   PERMS: {
     ADD: "ADD",
     EDIT: "EDIT",
