@@ -1,0 +1,26 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches:
+      - new-impl
+
+env:
+  DOCKER_REPO: node-template
+  HARBOR_USER: ${{ secrets.HARBOR_USER }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Log in to Harbor
+        run: echo "${{ secrets.HARBOR_PASSWORD }}" | docker login https://harbor.internal.codebuckets.in -u ${{ env.HARBOR_USER }} --password-stdin
+
+      - name: Build Docker image
+        run: docker build -t harbor.internal.codebuckets.in/${{ env.DOCKER_REPO }}/${{ env.DOCKER_REPO }}:latest . -f Dockerfile.stage
+
+      - name: Push Docker image
+        run: docker push harbor.internal.codebuckets.in/${{ env.DOCKER_REPO }}/${{ env.DOCKER_REPO }}:latest
