@@ -1,0 +1,12 @@
+version: '3.8'
+services:
+  node-template:
+    image: harbor.internal.codebuckets.in/node-template/node-template
+    ports:
+      - "25000:3000"
+    networks:
+      - node_template_network
+
+
+networks:
+  node_template_network:
