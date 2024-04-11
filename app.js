@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const path = require("path");
 const cors = require("cors");
 const helmet = require("helmet");
+const logger = require("./middleware/logger");
 
 require("dotenv").config({ path: `.env.${process.env.NODE_ENV}` });
 require("moment-timezone")().tz("Asia/Kolkata");
@@ -13,14 +14,12 @@ console.log(process.env.NODE_ENV);
 
 const { v1 } = require("./routes");
 const sequelize = require("./config/db");
-const { morganLogger } = require("./middleware/logger");
 
 const app = express();
 
 app.use("/", express.static(path.join(__dirname, "../public")));
 
 app
-  .use(morganLogger)
   .use(cors())
   .use(helmet())
   .use(
@@ -31,6 +30,7 @@ app
     })
   )
   .use(bodyParser.json({ limit: "100mb" }))
+  .use(logger)
   .use(express.static(path.join(__dirname, "public")));
 
 app.use("/v1", v1);

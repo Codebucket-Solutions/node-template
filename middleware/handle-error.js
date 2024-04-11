@@ -15,12 +15,15 @@ const { BAD_GATEWAY } = statusCodes;
  */
 
 const handleError = (err, res) => {
-	const { statusCode = BAD_GATEWAY, message } = err;
-	res.status(statusCode).json({
-		status: FAILURE,
-		statusCode,
-		message,
-	});
+  const { statusCode = BAD_GATEWAY, message } = err;
+
+  if (res.log) res.log.error(err);
+
+  res.status(statusCode).json({
+    status: FAILURE,
+    statusCode,
+    message,
+  });
 };
 
 module.exports = handleError;
