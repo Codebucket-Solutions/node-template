@@ -7,7 +7,6 @@ on:
 
 env:
   DOCKER_REPO: node-template
-  HARBOR_USER: ${{ secrets.HARBOR_USER }}
 
 jobs:
   build:
@@ -24,3 +23,19 @@ jobs:
 
       - name: Push Docker image
         run: docker push harbor.internal.codebuckets.in/${{ env.DOCKER_REPO }}/${{ env.DOCKER_REPO }}:latest
+
+  deploy:
+    runs-on: dev-server
+    needs: build
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Pull new Image
+        run: docker compose -f docker-compose-stage.yml pull
+
+      - name: Remove old containers
+        run: docker compose -f docker-compose-stage.yml down || true
+
+      - name: Start Container
+        run: docker compose -f docker-compose-stage.yml up -d
