@@ -49,7 +49,7 @@ let targets = [consoleTransport];
 
 if (NODE_ENV == "STAGE" || NODE_ENV == "stage") {
   targets = [consoleTransport, logServerTransport];
-} else if (NODE_ENV == "PRODUCTION" || NODE_ENV == "PRODUCTION") {
+} else if (NODE_ENV == "PRODUCTION" || NODE_ENV == "production") {
   targets = [logServerTransport];
 }
 
