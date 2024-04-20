@@ -9,6 +9,7 @@
 		"start:stage": "export NODE_ENV=stage&&node --import @codebucket/azure-env ./bin/www",
 		"start:prod": "export NODE_ENV=production&&node --import @codebucket/azure-env ./bin/www",
 		"test:dev": "set NODE_ENV=development&&mocha test/*.js --exit"
+		
 	},
 	"repository": {
 		"type": "git",
