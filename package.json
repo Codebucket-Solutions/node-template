@@ -22,7 +22,7 @@
 	},
 	"homepage": "https://github.com/Codebucket-Solutions/node-template#readme",
 	"dependencies": {
-		"@codebucket/azure-env": "^1.0.0",
+		"@codebucket/azure-env": "^1.0.2",
 		"@codebucket/logserver-transport": "^1.0.2",
 		"aws-sdk": "^2.1309.0",
 		"axios": "^1.3.2",
