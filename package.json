@@ -6,8 +6,8 @@
 	"scripts": {
 		"plop": "plop",
 		"start:dev": "set NODE_ENV=development&&nodemon ./bin/www",
-		"start:stage": "export NODE_ENV=stage&&node --import @codebucket/azure-env ./bin/www",
-		"start:prod": "export NODE_ENV=production&&node --import @codebucket/azure-env ./bin/www",
+		"start:stage": "export NODE_ENV=stage&&node --loader @codebucket/azure-env ./bin/www",
+		"start:prod": "export NODE_ENV=production&&node --loader @codebucket/azure-env ./bin/www",
 		"test:dev": "set NODE_ENV=development&&mocha test/*.js --exit"
 		
 	},
