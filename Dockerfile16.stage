@@ -1,4 +1,4 @@
-# Use the node:20-slim image as base
+# Use the node:16-slim image as base
 FROM node:16-slim
 
 # Set the working directory inside the container
