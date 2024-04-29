@@ -1,5 +1,5 @@
-const { createApi } = require("./general");
+const General = require("./general");
 
 module.exports = {
-  createApi,
+  ...General
 };

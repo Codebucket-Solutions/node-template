@@ -3,17 +3,14 @@ const bodyParser = require("body-parser");
 const path = require("path");
 const cors = require("cors");
 const helmet = require("helmet");
-const logger = require("./middleware/logger");
 
 require("dotenv").config({ path: `.env.${process.env.NODE_ENV}` });
 require("moment-timezone")().tz("Asia/Kolkata");
 
-const { validator, validateToken, handleError } = require("./middleware");
-
-console.log(process.env.NODE_ENV);
+const { validator, validateToken, handleError, logger } = require("@middleware");
 
 const { v1 } = require("./routes");
-const sequelize = require("./config/db");
+const sequelize = require("@config");
 
 const app = express();
 

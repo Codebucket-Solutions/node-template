@@ -3,15 +3,25 @@
 	"version": "1.0.0",
 	"description": "",
 	"main": "app.js",
+	"_moduleAliases": {
+		"@root": ".",
+		"@models": "./models/init-models.js",
+		"@controllers": "./controllers/",
+		"@service": "./service/",
+		"@middleware": "./middleware/index.js",
+		"@utils": "./utils/index.js",
+		"@helper": "./helper/index.js",
+		"@config": "./config/db.js",
+		"@webservice": "./webservice/index.js"
+	},
 	"scripts": {
 		"plop": "plop",
-		"start:dev": "set NODE_ENV=development&&nodemon ./bin/www",
+		"start:dev": "export NODE_ENV=development&&nodemon ./bin/www",
 		"start:stage16-17": "export NODE_ENV=stage&&node --loader @codebucket/azure-env ./bin/www",
 		"start:prod16-17": "export NODE_ENV=production&&node --loader @codebucket/azure-env ./bin/www",
 		"start:stage": "export NODE_ENV=stage&&node --import @codebucket/azure-env ./bin/www",
 		"start:prod": "export NODE_ENV=production&&node --import @codebucket/azure-env ./bin/www",
 		"test:dev": "set NODE_ENV=development&&mocha test/*.js --exit"
-		
 	},
 	"repository": {
 		"type": "git",
@@ -44,6 +54,7 @@
 		"humps": "^2.0.1",
 		"joi": "^17.7.0",
 		"jsonwebtoken": "^9.0.0",
+		"module-alias": "^2.2.3",
 		"moment-timezone": "^0.5.40",
 		"mysql2": "^3.1.0",
 		"nodemailer": "^6.9.1",

@@ -1,5 +1,5 @@
-// const ReplaceWithService = require("./replace-with-service");
+const { General } = require('./general')
 
 module.exports = {
-  // ReplaceWithService
+  General
 };

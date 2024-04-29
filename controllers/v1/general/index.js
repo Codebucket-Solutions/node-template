@@ -1,2 +1,5 @@
-const { createApi } = require("../index");
-module.exports = { createApi };
+const General = require("./general");
+
+module.exports = {
+    ...General
+}

@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+      "baseUrl": "./",
+      "paths": {
+        "@models": ["models/init-models.js"],
+        "@controllers/*": ["controllers/*"],
+        "@service/*": ["service/*"],
+        "@middleware": ["middleware/index.js"],
+        "@utils": ["utils/index.js"],
+        "@helper": ["helper/index.js"],
+        "@config": ["config/db.js"],
+        "@webservice": ["webservice/index.js"]
+      }
+    },
+  }
+  

@@ -1,8 +1,8 @@
 const express = require("express");
 const app = express();
 
-const { general } = require("./general");
+const General = require("./general");
 
-app.use("/", general);
+app.use("/", General);
 
 module.exports = app;
