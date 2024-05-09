@@ -14,8 +14,8 @@ on:
 
 jobs:
 
-  build:
-    name: Build
+  SonarQube-QualityGate:
+    name: SonarQube-QualityGate
     runs-on: ubuntu-latest
     permissions: read-all
 
