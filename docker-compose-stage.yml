@@ -3,13 +3,15 @@ version: '3.8'
 services:
   node-template:
     image: harbor.internal.codebuckets.in/node-template/node-template
+    container_name: node-template
     restart: unless-stopped
     ports:
       - "25000:3000"
     networks:
-      - node_template_network
+      - database_network
     env_file:
       - /home/empty.env
 
 networks:
-  node_template_network:
+  database_network:
+    external: true
