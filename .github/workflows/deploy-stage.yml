@@ -3,7 +3,8 @@ name: Build and Push Docker Image
 on:
   push:
     branches:
-      - new-impl
+      - stage
+      - hyperxpro-patch-1
 
 env:
   DOCKER_REPO: node-template
