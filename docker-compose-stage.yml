@@ -6,7 +6,7 @@ services:
     container_name: node-template
     restart: unless-stopped
     ports:
-      - "25000:3000"
+      - "127.0.0.1:25000:3000"
     networks:
       - database_network
     env_file:
