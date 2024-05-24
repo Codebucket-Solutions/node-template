@@ -4,10 +4,10 @@ on:
   push:
     branches:
       - stage
-      - hyperxpro-patch-1
 
 env:
   DOCKER_REPO: node-template
+  DOCKER_IMAGE: stage
 
 jobs:
   build:
@@ -20,10 +20,10 @@ jobs:
         run: echo "${{ secrets.HARBOR_PASSWORD }}" | docker login https://harbor.internal.codebuckets.in -u '${{ secrets.HARBOR_USER }}' --password-stdin
 
       - name: Build Docker image
-        run: docker build -t harbor.internal.codebuckets.in/${{ env.DOCKER_REPO }}/${{ env.DOCKER_REPO }}:latest . -f Dockerfile.stage
+        run: docker build -t harbor.internal.codebuckets.in/${{ env.DOCKER_REPO }}/${{ env.DOCKER_IMAGE }}:latest . -f Dockerfile.stage
 
       - name: Push Docker image
-        run: docker push harbor.internal.codebuckets.in/${{ env.DOCKER_REPO }}/${{ env.DOCKER_REPO }}:latest
+        run: docker push harbor.internal.codebuckets.in/${{ env.DOCKER_REPO }}/${{ env.DOCKER_IMAGE }}:latest
 
   deploy:
     runs-on: dev-server
