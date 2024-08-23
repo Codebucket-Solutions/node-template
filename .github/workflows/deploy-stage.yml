@@ -11,7 +11,7 @@ env:
 
 jobs:
   build:
-    runs-on: docker-builds
+    runs-on: ${{ vars.DOCKER_BUILD_RUNNER }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
