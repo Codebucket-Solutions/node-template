@@ -7,11 +7,11 @@ WORKDIR /usr/app
 # Copy the rest of the application code to the working directory
 COPY . .
 
-# Install dependencies
-RUN npm install
+# Install dependencies for production
+RUN npm install --production
 
 # Expose any necessary ports (if your application listens on any)
-# EXPOSE 3000
+EXPOSE 3000
 
 # Command to start the application
 CMD ["npm", "run", "start:stage"]

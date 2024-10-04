@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   node-template:
     image: harbor.internal.codebuckets.in/node-template/stage
