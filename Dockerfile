@@ -14,4 +14,4 @@ RUN npm install --production
 EXPOSE 3000
 
 # Command to start the application
-CMD ["npm", "run", "start:stage"]
+CMD ["npm", "run", "start"]
