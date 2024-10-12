@@ -25,6 +25,9 @@ jobs:
       - name: Push Docker image
         run: docker push harbor.internal.codebuckets.in/${{ env.DOCKER_REPO }}/${{ env.DOCKER_IMAGE }}:latest
 
+      - name: Log out from Harbor
+        run: docker logout https://harbor.internal.codebuckets.in
+
   deploy:
     runs-on: dev-server
     needs: build
