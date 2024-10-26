@@ -7,6 +7,9 @@ WORKDIR /usr/app
 # Copy the rest of the application code to the working directory
 COPY . .
 
+# Set Registry
+RUN npm set registry https://npm.internal.codebuckets.in
+
 # Install dependencies for production
 RUN npm install --production
 
