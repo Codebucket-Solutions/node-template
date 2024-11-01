@@ -1,5 +1,5 @@
-# Use the node:20-slim image as base
-FROM node:20-slim
+# Use Node20 Slim Image
+FROM harbor.internal.codebuckets.in/node20/slim
 
 # Set the working directory inside the container
 WORKDIR /usr/app
