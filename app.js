@@ -8,7 +8,7 @@ const logger = require("./middleware/logger");
 require("dotenv").config({ path: `.env.${process.env.NODE_ENV}` });
 require("moment-timezone")().tz("Asia/Kolkata");
 
-const { validator, validateToken, handleError } = require("./middleware");
+const { validator, validateToken, handleError, trimMiddleware } = require("./middleware");
 
 console.log(process.env.NODE_ENV);
 
@@ -33,6 +33,7 @@ app
   .use(logger)
   .use(express.static(path.join(__dirname, "public")));
 
+app.use(trimMiddleware);
 app.use("/v1", v1);
 
 app.use((err, req, res, next) => {
