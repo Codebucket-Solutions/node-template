@@ -1,6 +1,14 @@
 module.exports = function (plop) {
   // create your generators here
 
+  // Validation for generatior that should that file or folder name should be in kabab-case
+  const kebabCaseRegex = /^[a-z0-9]+(-[a-z0-9]+)*$/;
+
+  const validateKebab = value => {
+		if (kebabCaseRegex.test(value)) return true;
+		return "File name must be in kebab-case (e.g., user-profile, auth-service).";
+	};
+
   plop.setGenerator("route", {
     description: "application route logic",
     prompts: [
@@ -8,16 +16,19 @@ module.exports = function (plop) {
         type: "input",
         name: "version",
         message: "Please enter version name",
+        validate: validateKebab,
       },
       {
         type: "input",
         name: "group",
         message: "Please enter group name",
+        validate: validateKebab,
       },
       {
         type: "input",
         name: "name",
         message: "Please enter route name",
+        validate: validateKebab,
       },
     ],
     actions: [
@@ -36,16 +47,19 @@ module.exports = function (plop) {
         type: "input",
         name: "version",
         message: "Please enter version name",
+        validate: validateKebab,
       },
       {
         type: "input",
         name: "group",
         message: "Please enter group name",
+        validate: validateKebab,
       },
       {
         type: "input",
         name: "name",
         message: "Please enter controller name",
+        validate: validateKebab,
       },
     ],
     actions: [
@@ -64,16 +78,19 @@ module.exports = function (plop) {
         type: "input",
         name: "version",
         message: "Please enter version name",
+        validate: validateKebab,
       },
       {
         type: "input",
         name: "name",
         message: "Please enter file name",
+        validate: validateKebab,
       },
       {
         type: "input",
         name: "serviceName",
         message: "Please enter service name",
+        validate: validateKebab,
       },
     ],
     actions: [

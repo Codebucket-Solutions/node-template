@@ -1,5 +1,4 @@
 const express = require("express");
-const bodyParser = require("body-parser");
 const path = require("path");
 const cors = require("cors");
 const helmet = require("helmet");
@@ -23,15 +22,16 @@ app
   .use(cors())
   .use(helmet())
   .use(
-    bodyParser.urlencoded({
+    express.urlencoded({
       limit: "100mb",
       extended: true,
       parameterLimit: 50000,
     })
   )
-  .use(bodyParser.json({ limit: "100mb" }))
+  .use(express.json({limit:"100mb"}))
   .use(logger)
-  .use(express.static(path.join(__dirname, "public")));
+  .use(express.static(path.join(__dirname, "public")))
+  .use(validator);
 
 app.use(trimMiddleware);
 app.use("/v1", v1);
