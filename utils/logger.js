@@ -47,10 +47,8 @@ let logServerTransport = {
 
 let targets = [consoleTransport];
 
-if (NODE_ENV == "STAGE" || NODE_ENV == "stage") {
-  targets = [consoleTransport, logServerTransport];
-} else if (NODE_ENV == "PRODUCTION" || NODE_ENV == "production") {
-  targets = [logServerTransport];
+if (NODE_ENV !== "development" || NODE_ENV !== "DEVELOPMENT") {
+	targets = [consoleTransport, logServerTransport];
 }
 
 const transports = pino.transport({
