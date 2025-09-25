@@ -1,0 +1,36 @@
+name: AI Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+# The bot posts review comments, so we need these:
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: ai-review-${{ github.event.pull_request.head.sha }}
+  cancel-in-progress: true
+
+jobs:
+  ai-review:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call AI Review Bot (base → head)
+        env:
+          REVIEW_API: https://review-bot.codebucketstage.online/review
+        run: |
+          payload=$(jq -n \
+            --arg owner   "${{ github.event.pull_request.base.repo.owner.login }}" \
+            --arg repo    "${{ github.event.pull_request.base.repo.name }}" \
+            --argjson pr  ${{ github.event.pull_request.number }} \
+            --arg baseSha "${{ github.event.pull_request.base.sha }}" \
+            --arg headSha "${{ github.event.pull_request.head.sha }}" \
+            '{owner: $owner, repo: $repo, prNumber: $pr, baseSha: $baseSha, headSha: $headSha}')
+    
+          echo "Payload: $payload"
+        
+          curl -sS --fail -X POST "$REVIEW_API" \
+            -H "Content-Type: application/json" \
+            -d "$payload"
