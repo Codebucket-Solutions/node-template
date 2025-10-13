@@ -1,6 +1,6 @@
 const { LINK, TEXT } = require("./constant");
 
-getSearchAbleData = ({ data: { uri, link_title }, children }) => {
+const getSearchAbleData = ({ data: { uri, link_title }, children }) => {
   let mData = [];
   mData = [...mData, uri, ...(link_title ? [link_title] : [])];
   if (!children) return mData;
@@ -12,20 +12,22 @@ getSearchAbleData = ({ data: { uri, link_title }, children }) => {
   return mData;
 };
 
-checkForMatch = (a, b) => {
+const checkForMatch = (a, b) => {
   let c = 0;
   a.map((v) => {
     let d = 0;
     b.map((v1) => {
       if (v1.toLowerCase().includes(v.toLowerCase())) d++;
     });
-    d > 0 ? c++ : false;
+    if (d > 0) {
+      c++;
+    }
   });
 
   return c >= a.length;
 };
 
-getSearchType = (type) => {
+const getSearchType = (type) => {
   switch (type) {
     case 0:
       return `AND type = '${LINK}'`;

@@ -35,8 +35,6 @@ module.exports = {
 
 		let m = Math.floor(p / 60);
 
-		p -= m * 60;
-
 		let tmp = [];
 
 		d && tmp.push(d + "d");
@@ -45,7 +43,7 @@ module.exports = {
 
 		(d || h || m) && tmp.push(m + "m");
 
-		var datetime = tmp.join(" ");
+		let datetime = tmp.join(" ");
 		return datetime;
 	},
 	dateSort: date => {
@@ -54,7 +52,13 @@ module.exports = {
 		date.sort(function (a, b) {
 			let aa = a.split("-").join(),
 				bb = b.split("-").join();
-			return aa < bb ? -1 : aa > bb ? 1 : 0;
+			if (aa < bb) {
+        		return -1;
+    		} else if (aa > bb) {
+        		return 1;
+    		} else {
+        		return 0;
+    		}
 		});
 
 		return {

@@ -11,7 +11,7 @@ module.exports = {
       return enc;
     } catch (error) {
       console.error(error);
-      return 0;
+      return "0";
     }
   },
   hashGenerator: async (USERNAME, SENDERID, messgae, KEY) => {

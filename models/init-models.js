@@ -1,8 +1,8 @@
-var DataTypes = require("sequelize").DataTypes;
-var _casbin_rule = require("./casbin_rule");
-var _sys_dropdown_list = require("./sys_dropdown_list");
-var _sys_otp_template = require("./sys_otp_template");
-var _sys_tables = require("./sys_tables");
+let DataTypes = require("sequelize").DataTypes;
+let _casbin_rule = require("./casbin_rule");
+let _sys_dropdown_list = require("./sys_dropdown_list");
+let _sys_otp_template = require("./sys_otp_template");
+let _sys_tables = require("./sys_tables");
 
 function initModels(sequelize) {
   var casbin_rule = _casbin_rule(sequelize, DataTypes);

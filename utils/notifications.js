@@ -7,8 +7,7 @@ const Sequelize = require("sequelize");
 module.exports = {
 	notification: async function (body, subject) {
 		try {
-			const sender = new gcm.Sender(process.env.GCMSENDER),
-				createdDate = getDate("YYYY-MM-DD HH:mm:ss");
+			const sender = new gcm.Sender(process.env.GCMSENDER);
 
 			const message = new gcm.Message({
 				notification: {
