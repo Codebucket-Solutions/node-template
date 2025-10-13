@@ -49,7 +49,7 @@ const formidableUpload = async (req) => {
     const formfields = await new Promise(function (resolve, reject) {
       form.parse(req, function (err, fields, files) {
         if (err) {
-          reject(err);
+          reject(new Error("Form Not parsed "));
           return;
         }
 
@@ -59,7 +59,7 @@ const formidableUpload = async (req) => {
 
     return formfields;
   } catch (error) {
-    throw error;
+    console.error("Error in formidable upload:", error.message);
   }
 };
 
