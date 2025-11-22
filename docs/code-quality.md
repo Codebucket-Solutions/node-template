@@ -147,9 +147,10 @@ Git hooks automatically run linting and formatting before each commit.
 ### What Happens on Commit:
 
 1. **lint-staged** runs on staged files
-2. **ESLint** fixes issues in `.js` files
-3. **Prettier** formats all staged files
-4. If errors can't be auto-fixed, commit is blocked
+2. **Prettier** formats all staged files (and auto-fixes formatting)
+3. **ESLint** checks for code quality issues
+4. If **ANY** linting error is found, the commit is **blocked** and errors are displayed
+5. You must fix the errors manually and try committing again
 
 ### Configuration
 
@@ -164,7 +165,7 @@ npx lint-staged
 ```json
 {
 	"lint-staged": {
-		"*.js": ["eslint --fix", "prettier --write"],
+		"*.js": ["eslint", "prettier --write"],
 		"*.{json,md,yml,yaml}": ["prettier --write"]
 	}
 }

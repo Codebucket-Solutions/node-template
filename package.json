@@ -72,7 +72,7 @@
 	},
 	"lint-staged": {
 		"*.js": [
-			"eslint --fix",
+			"eslint",
 			"prettier --write"
 		],
 		"*.{json,md,yml,yaml}": [
