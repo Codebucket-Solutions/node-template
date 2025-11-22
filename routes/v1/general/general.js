@@ -7,7 +7,7 @@ const { createApi } = require("../../../controllers/v1");
 const { PERMS, RESOURCES } = require("../../../utils/constant");
 
 router.post("/", (req, res, next) =>
-  dispatcher(req, res, next, createApi, RESOURCES.TEMP, PERMS.ADD)
+	dispatcher(req, res, next, createApi, RESOURCES.TEMP, PERMS.ADD),
 );
 
 module.exports = router;

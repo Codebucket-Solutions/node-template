@@ -18,7 +18,9 @@ module.exports = function (req, res, next) {
 	let user = { isAuth: false };
 	req.user = user;
 
-	if (!token||token=='null'||token==null) return next();
+	if (!token || token === "null" || token === null) {
+		return next();
+	}
 
 	let decoded;
 	try {
@@ -27,7 +29,9 @@ module.exports = function (req, res, next) {
 		return next(err);
 	}
 
-	if (!decoded) return next();
+	if (!decoded) {
+		return next();
+	}
 
 	user = { ...user, isAuth: true, ...decoded };
 	req.user = user;

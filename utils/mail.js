@@ -11,24 +11,29 @@ const transporter = nodemailer.createTransport({
 });
 
 transporter.verify(error => {
-	if (error) console.error(error);
-	else console.log(`Success`);
+	if (error) {
+		console.error(error);
+	} else {
+		console.log(`Success`);
+	}
 });
 
 module.exports = {
 	sendMail: async (recipient, subject, body, attachments = []) => {
 		try {
-			let options = {
+			const options = {
 				from: `"Govt. Of Bihar" ${process.env.EMAIL_USER}`, // sender address
 				to: recipient, // list of receivers
 				priority: "high",
-				subject: subject,
+				subject,
 				html: body,
 				attachments,
 			};
 
 			transporter.sendMail(options, (error, info) => {
-				if (error) console.error(error);
+				if (error) {
+					console.error(error);
+				}
 
 				console.log(info?.messageId);
 			});

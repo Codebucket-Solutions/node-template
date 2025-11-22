@@ -5,11 +5,11 @@ const authHelper = require("./auth");
 const casbinEnforcer = require("./casbin-enforcer");
 
 module.exports = {
-  users,
-  ErrorHandler,
-  handleError,
-  getOrThrow,
-  statusCodes,
-  authHelper,
-  casbinEnforcer,
+	users,
+	ErrorHandler,
+	handleError,
+	getOrThrow,
+	statusCodes,
+	authHelper,
+	casbinEnforcer,
 };
