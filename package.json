@@ -8,7 +8,12 @@
 		"start:16": "node --loader @codebucket/azure-env ./bin/www",
 		"start": "node --import @codebucket/azure-env ./bin/www",
 		"start:dev": "cross-env NODE_ENV=development nodemon ./bin/www",
-		"test:dev": "set NODE_ENV=development&&mocha test/*.js --exit"
+		"test:dev": "set NODE_ENV=development&&mocha test/*.js --exit",
+		"lint": "eslint .",
+		"lint:fix": "eslint . --fix",
+		"format": "prettier --write \"**/*.{js,json,md,yml,yaml}\"",
+		"format:check": "prettier --check \"**/*.{js,json,md,yml,yaml}\"",
+		"prepare": "husky install"
 	},
 	"repository": {
 		"type": "git",
@@ -37,6 +42,7 @@
 		"crypto": "^1.0.1",
 		"dotenv": "^16.0.3",
 		"express": "^4.18.2",
+		"express-rate-limit": "^8.2.1",
 		"formidable": "^2.1.1",
 		"helmet": "^6.0.1",
 		"humps": "^2.0.1",
@@ -44,15 +50,33 @@
 		"jsonwebtoken": "^9.0.0",
 		"moment-timezone": "^0.5.40",
 		"mysql2": "^3.1.0",
-		"nodemailer": "^6.9.1",
+		"nodemailer": "^7.0.10",
 		"pino": "^8.20.0",
 		"pino-http": "^9.0.0",
 		"pino-pretty": "^11.0.0",
+		"rate-limit-redis": "^4.3.0",
+		"redis": "^5.10.0",
 		"sequelize": "^6.28.0",
 		"uuid": "^9.0.0"
 	},
 	"devDependencies": {
+		"eslint": "^9.39.1",
+		"eslint-config-prettier": "^10.1.8",
+		"eslint-plugin-filenames-simple": "^0.9.0",
+		"eslint-plugin-node": "^11.1.0",
+		"eslint-plugin-prettier": "^5.5.4",
+		"husky": "^9.1.7",
+		"lint-staged": "^16.2.7",
 		"plop": "^3.1.1",
 		"prettier": "^3.5.3"
+	},
+	"lint-staged": {
+		"*.js": [
+			"eslint",
+			"prettier --write"
+		],
+		"*.{json,md,yml,yaml}": [
+			"prettier --write"
+		]
 	}
 }

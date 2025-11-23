@@ -11,7 +11,7 @@ function secondsToHMS(secs) {
 	}
 	const sign = secs < 0 ? "-" : "";
 	secs = Math.abs(secs);
-	return sign + z((secs / 3600) | 0) + ":" + z(((secs % 3600) / 60) | 0);
+	return `${sign + z((secs / 3600) | 0)}:${z(((secs % 3600) / 60) | 0)}`;
 }
 
 module.exports = {
@@ -25,40 +25,40 @@ module.exports = {
 		return toSeconds(time);
 	},
 	toDaysHourMin: p => {
-		let d = Math.floor(p / (3600 * 24));
+		const d = Math.floor(p / (3600 * 24));
 
 		p -= d * 3600 * 24;
 
-		let h = Math.floor(p / 3600);
+		const h = Math.floor(p / 3600);
 
 		p -= h * 3600;
 
-		let m = Math.floor(p / 60);
+		const m = Math.floor(p / 60);
 
-		let tmp = [];
+		const tmp = [];
 
-		d && tmp.push(d + "d");
+		d && tmp.push(`${d}d`);
 
-		(d || h) && tmp.push(h + "h");
+		(d || h) && tmp.push(`${h}h`);
 
-		(d || h || m) && tmp.push(m + "m");
+		(d || h || m) && tmp.push(`${m}m`);
 
-		let datetime = tmp.join(" ");
+		const datetime = tmp.join(" ");
 		return datetime;
 	},
 	dateSort: date => {
 		// Format YYYY-MM-DD
 
-		date.sort(function (a, b) {
-			let aa = a.split("-").join(),
+		date.sort((a, b) => {
+			const aa = a.split("-").join(),
 				bb = b.split("-").join();
 			if (aa < bb) {
-        		return -1;
-    		} else if (aa > bb) {
-        		return 1;
-    		} else {
-        		return 0;
-    		}
+				return -1;
+			} else if (aa > bb) {
+				return 1;
+			} else {
+				return 0;
+			}
 		});
 
 		return {
@@ -82,8 +82,8 @@ module.exports = {
 		return parseInt(moment.utc(date).utcOffset("+05:30").format("e"), 10);
 	},
 	dateDiff: (newDate, pastDate, format = "seconds") => {
-		let date1 = moment(newDate);
-		let date2 = moment(pastDate);
+		const date1 = moment(newDate);
+		const date2 = moment(pastDate);
 		return date2.diff(date1, format);
 	},
 	ISO: (date, format) => {
@@ -91,7 +91,7 @@ module.exports = {
 	},
 	getDates: (startDate, endDate, steps = 3) => {
 		const dateArray = [];
-		let currentDate = new Date(startDate);
+		const currentDate = new Date(startDate);
 
 		while (currentDate <= new Date(endDate)) {
 			dateArray.push(moment(new Date(currentDate)).format("YYYY-MM-DD"));
@@ -103,7 +103,7 @@ module.exports = {
 	},
 	financialYear: date => {
 		let fiscalYear = "";
-		let today = date ? new Date(date) : new Date();
+		const today = date ? new Date(date) : new Date();
 		if (today.getMonth() + 1 <= 3) {
 			fiscalYear = today.getFullYear() - 1;
 		} else {

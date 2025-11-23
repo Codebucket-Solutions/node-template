@@ -1,14 +1,8 @@
-const {
-  statusCodes,
-  authHelper,
-  ErrorHandler,
-  casbinEnforcer,
-} = require("../helper");
+const { statusCodes, ErrorHandler, casbinEnforcer } = require("../helper");
 const { constant, camelize } = require("../utils");
 
 const { OK, UNAUTHORIZED } = statusCodes;
-const { SUCCESS, FAILURE } = constant;
-const { checkAuth, checkUserType } = authHelper;
+const { SUCCESS } = constant;
 
 /**
  *
@@ -25,39 +19,43 @@ const { checkAuth, checkUserType } = authHelper;
  */
 
 const dispatcher = async (req, res, next, func, resource, perm) => {
-  try {
-    const { user } = req;
-    if (perm) {
-      let enforcer = await casbinEnforcer;
-      const checkPerm = await enforcer.enforce(
-        user.userId,
-        resource,
-        perm,
-        user.role
-      );
+	try {
+		const { user, body } = req;
 
-      if (!checkPerm) throw new ErrorHandler(UNAUTHORIZED, "Unauthorized");
-    }
-    const data = await func(req, res, next);
-    if (data != null) {
-      if (req.body && req.body.export) {
-        if (data.data) {
-          return res.xls(
-            req.body.fileName ? req.body.fileName : "report.xlsx",
-            data.data
-          );
-        } else {
-          return res.xls(
-            req.body.fileName ? req.body.fileName : "report.xlsx",
-            data
-          );
-        }
-      }
-      return res.status(OK).json({ status: SUCCESS, data: camelize(data) });
-    }
-  } catch (err) {
-    next(err);
-  }
+		const enforcer = await casbinEnforcer;
+		if (perm) {
+			const checkPerm = await enforcer.enforce(
+				String(user.userId),
+				body.programCode,
+				perm,
+				user.role,
+			);
+
+			if (!checkPerm) throw new ErrorHandler(UNAUTHORIZED, "Unauthorized");
+		} else if (body.programCode) {
+			const permissions = await enforcer.getImplicitPermissionsForUser(`${user.userId}`);
+			const hasAccess = permissions.some(([sub, obj, act]) => obj === body.programCode);
+
+			if (user.role !== "Admin" && !hasAccess)
+				throw new ErrorHandler(UNAUTHORIZED, "Unauthorized");
+		}
+		const data = await func(req, res, next);
+		if (data != null) {
+			if (req.body && req.body.export) {
+				if (data.data) {
+					return res.xls(
+						req.body.fileName ? req.body.fileName : "report.xlsx",
+						data.data,
+					);
+				} else {
+					return res.xls(req.body.fileName ? req.body.fileName : "report.xlsx", data);
+				}
+			}
+			return res.status(OK).json({ status: SUCCESS, data: camelize(data) });
+		}
+	} catch (err) {
+		next(err);
+	}
 };
 
 module.exports = dispatcher;

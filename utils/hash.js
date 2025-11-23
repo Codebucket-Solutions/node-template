@@ -6,7 +6,7 @@ module.exports = {
 			const saltRounds = 10;
 
 			const hashedPassword = await new Promise((resolve, reject) => {
-				bcrypt.hash(password, saltRounds, function (err, hash) {
+				bcrypt.hash(password, saltRounds, (err, hash) => {
 					if (err) {
 						return reject(err instanceof Error ? err : new Error(err));
 					}
@@ -20,8 +20,8 @@ module.exports = {
 		}
 	},
 	compare: async (original, password) => {
-		return new Promise(function (resolve, reject) {
-			bcrypt.compare(password, original, function (err, isMatch) {
+		return new Promise((resolve, reject) => {
+			bcrypt.compare(password, original, (err, isMatch) => {
 				if (err) {
 					return reject(err instanceof Error ? err : new Error(err));
 				} else {

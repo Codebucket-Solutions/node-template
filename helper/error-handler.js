@@ -1,9 +1,9 @@
 class ErrorHandler extends Error {
-  constructor(statusCode, message) {
-    super();
-    this.statusCode = statusCode;
-    this.message = message;
-  }
+	constructor(statusCode, message) {
+		super();
+		this.statusCode = statusCode;
+		this.message = message;
+	}
 }
 
 /**
@@ -11,17 +11,16 @@ class ErrorHandler extends Error {
  * @param {string} key - The environment variable key.
  * @returns {string} The environment variable value.
  */
-const getOrThrow = (key) => {
-  const value = process.env[key];
+const getOrThrow = key => {
+	const value = process.env[key];
 
-  if ( value !== "" && !value) {
-    throw new Error(`Environment variable ${key} is not set.`);
-  }
-  return value;
+	if (value !== "" && !value) {
+		throw new Error(`Environment variable ${key} is not set.`);
+	}
+	return value;
 };
 
-
 module.exports = {
-  ErrorHandler,
-  getOrThrow,
+	ErrorHandler,
+	getOrThrow,
 };
