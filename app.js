@@ -19,7 +19,6 @@ const {
 console.log(process.env.NODE_ENV);
 
 const { v1 } = require("./routes");
-const sequelize = require("./config/db");
 
 const app = express();
 
@@ -47,14 +46,5 @@ app.use("/v1", v1);
 app.use((err, req, res) => {
 	handleError(err, res);
 });
-
-sequelize
-	.sync()
-	.then(() => {
-		console.log("Database connected");
-	})
-	.catch(err => {
-		throw err;
-	});
 
 module.exports = app;
