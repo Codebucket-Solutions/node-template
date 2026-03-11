@@ -10,38 +10,39 @@ const cpu = require("os").cpus().length;
 const app = require("../app");
 const debug = require("debug")("sidebrain:server");
 const http = require("http");
-const port = normalizePort(process.env.PORT || "3000");
+const port = normalizePort(process.env.PORT || "8080");
 let server;
+const initMaster = require("../init");
 
 /**
  * Get port from environment and store in Express.
  */
 
-if (cluster.isMaster) {
-	// Master initialization (DB, Cron, etc.)
-	const initMaster = require("../init");
-	initMaster()
-		.then(() => {
-			console.log("✔ Master initialization completed");
-		})
-		.catch(err => {
-			console.error("❌ Master initialization failed:", err);
-			process.exit(1);
-		});
+async function runMaster() {
+	console.log("Starting master initialization");
+	await initMaster();
+	console.log("Master-only services initialized");
 
-	// Worker
 	const workers =
-		process.env.NODE_ENV === "stage" || process.env.NODE_ENV === "development"
+		process.env.WEB_CONCURRENCY ??
+		(process.env.NODE_ENV === "stage" || process.env.NODE_ENV === "development"
 			? 1
-			: Math.max(1, cpu);
-	for (let i = 0; i < workers; i++) {
-		console.log("Forking worker", i + 1, "of", workers);
+			: Math.max(1, cpu));
+
+	for (let i = 0; i < Number(workers); i++) {
+		console.log("Forking worker", i + 1, "of", Number(workers));
 		cluster.fork();
 	}
+}
 
-	// Auto-restart worker on crash
+if (cluster.isPrimary) {
+	runMaster().catch(err => {
+		console.error("Master initialization failed:", err);
+		process.exit(1);
+	});
+
 	cluster.on("exit", worker => {
-		console.log(`Worker ${worker.process.pid} died → restarting…`);
+		console.log(`Worker ${worker.process.pid} died, restarting`);
 		cluster.fork();
 	});
 } else {

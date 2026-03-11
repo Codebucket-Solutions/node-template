@@ -1,0 +1,44 @@
+{
+	"generatedAt": "2026-03-11T10:26:06.224Z",
+	"score": 100,
+	"passed": 9,
+	"total": 9,
+	"checks": [
+		{
+			"name": "AGENTS.md",
+			"ok": true
+		},
+		{
+			"name": "docs/ARCHITECTURE.md",
+			"ok": true
+		},
+		{
+			"name": "docs/WORKFLOW.md",
+			"ok": true
+		},
+		{
+			"name": "docs/QUALITY.md",
+			"ok": true
+		},
+		{
+			"name": "docs/SECURITY.md",
+			"ok": true
+		},
+		{
+			"name": "docs/RELIABILITY.md",
+			"ok": true
+		},
+		{
+			"name": ".codex/config.toml",
+			"ok": true
+		},
+		{
+			"name": "scripts/worktree-bootstrap.sh",
+			"ok": true
+		},
+		{
+			"name": "CI workflow",
+			"ok": true
+		}
+	]
+}

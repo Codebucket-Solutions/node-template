@@ -1,5 +1,5 @@
 const sequelize = require("./config/db");
-const { sampleScheduledTask } = require("./helper/cron-timer");
+const { registerCronJobs } = require("./helper/cron");
 
 function initMaster() {
 	console.log("Master Initialization...");
@@ -9,8 +9,7 @@ function initMaster() {
 		.then(() => {
 			console.log("Database connected");
 
-			// CRON Jobs
-			sampleScheduledTask();
+			registerCronJobs();
 			console.log("Cron jobs started");
 		})
 		.catch(err => {
