@@ -5,6 +5,30 @@ Production-ready Node.js/Express.js backend template for building scalable, secu
 **Maintained by:** Codebucket Solutions Pvt. Ltd.
 
 📚 **Documentation**: See [`docs/`](./docs) for detailed usage guides.
+Workflow engine guide: [`service/v1/workflow-engine/README.md`](./service/v1/workflow-engine/README.md)
+
+## 🤖 Codex / Agent-Ready Additions
+
+This template now includes an additive repository operating layer for Codex and other coding agents while preserving the existing backend template structure.
+
+### Added capabilities
+
+- `AGENTS.md` for repo-level operating guidance
+- `.codex/config.toml` for trusted project-scoped Codex defaults
+- `docs/ARCHITECTURE.md`, `docs/WORKFLOW.md`, `docs/QUALITY.md`, `docs/SECURITY.md`, and `docs/RELIABILITY.md`
+- execution plans under `docs/exec-plans/`
+- deterministic worktree bootstrap script
+- repository verification and quality scoring scripts
+- CI workflow for baseline enforcement
+- Codex app setup guide in `docs/CODEX_APP_SETUP.md`
+
+### Recommended commands
+
+```bash
+npm run worktree:bootstrap
+npm run verify
+npm run plan:new -- --slug=my-task --title="My Task"
+```
 
 ---
 
@@ -60,7 +84,7 @@ node-template/
 ├── routes/                    # API routes (versioned)
 │   └── v1/
 ├── service/                   # Business logic layer
-│   └── v1/
+│   └── v1/                    # Includes workflow/assignment orchestration services
 ├── utils/                     # Utility functions
 ├── plop-templates/            # Code generation templates
 ├── app.js                     # Express app configuration
@@ -195,6 +219,15 @@ npm run plop
 - **Virus scanning** support (ClamAV)
 - **Upload rate limiting**
 
+### 10. **Workflow & Assignment Engine** 🔄
+
+- **Sequelize-backed assignment rules** for auto-assignment and reassignment
+- **Workflow action timeline** for application-level state transitions
+- **Escalation matrix** for stage/action-driven routing and auto escalation
+- **Resolver-based assignee lookup** for context-sensitive assignment flows
+
+📖 **[View workflow engine guide →](./service/v1/workflow-engine/README.md)**
+
 ### 10. **Email Notifications** 📧
 
 - **Nodemailer** with Zoho SMTP
@@ -246,11 +279,28 @@ NODE_ENV=development
 # JWT
 JWT_PRIVATE_KEY=your_secret_key
 
-# Email (Zoho)
+# Email
+EMAIL_TRANSPORT=SMTP
 EMAIL_HOST=smtp.zoho.in
 EMAIL_PORT=465
 EMAIL_USER=your_email@example.com
 EMAIL_PASSWORD=your_email_password
+
+# Mail server transport (used when EMAIL_TRANSPORT is not SMTP)
+MAILSERVER_URL=
+MAILSERVER_SENDERID=
+MAILSERVER_ACCESSTOKEN=
+
+# SMS
+SMS_TRANSPORT=GOVT
+SMS_SERVER_URL=
+SMS_SENDER_ID=
+SMS_ACCESS_TOKEN=
+PASSWORDSMS=
+ENDPOINT=
+KEY=
+SENDERID=
+USERNAMESMS=
 
 # Redis (Production Rate Limiting)
 REDIS_HOST=127.0.0.1
@@ -506,3 +556,7 @@ PORT=9001
 For internal support, contact: **team@thecodebucket.com**
 
 Repository: https://github.com/Codebucket-Solutions/node-template
+
+## Symphony support
+
+This template now includes a root `WORKFLOW.md`, `scripts/symphony-bootstrap.sh`, and `docs/SYMPHONY_SETUP.md` so it can be used with OpenAI Symphony in addition to Codex worktree workflows.

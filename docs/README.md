@@ -26,6 +26,30 @@ Complete guide for using the environment-aware rate limiting system with example
 - Redis configuration
 - Testing and monitoring
 
+### [Architecture](./ARCHITECTURE.md)
+
+Repository architecture plus the additive harness-engineering layer for Codex.
+
+### [Workflow](./WORKFLOW.md)
+
+Human and Codex app workflow, including worktree usage.
+
+### [Quality](./QUALITY.md)
+
+Baseline verification rules and repository quality scoring.
+
+### [Security](./SECURITY.md)
+
+Repository and Codex operating constraints for safer changes.
+
+### [Reliability](./RELIABILITY.md)
+
+Deterministic setup and operational guidance for worktrees and CI.
+
+### [Codex App Setup](./CODEX_APP_SETUP.md)
+
+Instructions for configuring Codex app local environments and project actions.
+
 ## Coming Soon
 
 Additional documentation will be added for:
@@ -42,3 +66,5 @@ Additional documentation will be added for:
 ---
 
 For general overview and quick start, see the main [README](../README.md).
+
+- `SYMPHONY_SETUP.md`: how to use this template with OpenAI Symphony.

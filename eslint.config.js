@@ -1,6 +1,45 @@
+const path = require("node:path");
 const eslintPluginPrettier = require("eslint-plugin-prettier");
 const eslintConfigPrettier = require("eslint-config-prettier");
-const filenamesSimple = require("eslint-plugin-filenames-simple");
+
+const kebabCaseFilenamesPlugin = {
+	rules: {
+		"naming-convention": {
+			meta: {
+				type: "suggestion",
+				docs: {
+					description: "enforce kebab-case JavaScript filenames",
+				},
+				schema: [],
+			},
+			create(context) {
+				return {
+					Program(node) {
+						const filename = context.filename;
+
+						if (!filename || filename === "<input>") {
+							return;
+						}
+
+						const extension = path.extname(filename);
+						const basename = path.basename(filename, extension);
+						const isKebabCase = /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(basename);
+
+						if (!isKebabCase) {
+							context.report({
+								node,
+								message: "Filename '{{name}}' should be kebab-case.",
+								data: {
+									name: basename,
+								},
+							});
+						}
+					},
+				};
+			},
+		},
+	},
+};
 
 module.exports = [
 	{
@@ -40,7 +79,7 @@ module.exports = [
 		},
 		plugins: {
 			"prettier": eslintPluginPrettier,
-			"filenames-simple": filenamesSimple,
+			"filenames-simple": kebabCaseFilenamesPlugin,
 		},
 		rules: {
 			...eslintConfigPrettier.rules,
@@ -73,7 +112,7 @@ module.exports = [
 			"brace-style": ["error", "1tbs"],
 
 			// Naming Conventions
-			"filenames-simple/naming-convention": ["error", { rule: "kebab-case" }],
+			"filenames-simple/naming-convention": "error",
 			"semi": ["error", "always"],
 		},
 	},

@@ -1,3 +1,3 @@
 module.exports = {
-	// ReplaceWithService
+	workflowEngine: require("./workflow-engine"),
 };

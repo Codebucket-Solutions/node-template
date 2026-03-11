@@ -5,7 +5,7 @@ const { camelize } = require("./helper");
 const { getDate, addDate, updateFormat } = require("./time");
 const { compare, hashPassword } = require("./hash");
 const { generateOtp, messenger } = require("./message");
-const { copyFiles, formidableUpload, uploadDocument, scanFile } = require("./upload");
+const { fileUpload, fileDownload } = require("./upload");
 const { sendMail } = require("./mail");
 
 module.exports = {
@@ -21,10 +21,8 @@ module.exports = {
 	hashPassword,
 	addDate,
 	generateOtp,
-	copyFiles,
 	sendMail,
 	messenger,
-	formidableUpload,
-	uploadDocument,
-	scanFile,
+	fileUpload,
+	fileDownload,
 };

@@ -13,7 +13,13 @@
 		"lint:fix": "eslint . --fix",
 		"format": "prettier --write \"**/*.{js,json,md,yml,yaml}\"",
 		"format:check": "prettier --check \"**/*.{js,json,md,yml,yaml}\"",
-		"prepare": "husky install"
+		"prepare": "husky install",
+		"docs:validate": "node scripts/validate-docs.js",
+		"quality:score": "node scripts/score-quality.js",
+		"plan:new": "node scripts/new-plan.js",
+		"worktree:bootstrap": "bash scripts/worktree-bootstrap.sh",
+		"verify": "npm run lint && npm run format:check && npm run docs:validate && npm run quality:score",
+		"symphony:bootstrap": "bash scripts/symphony-bootstrap.sh"
 	},
 	"repository": {
 		"type": "git",
@@ -26,6 +32,9 @@
 	},
 	"homepage": "https://github.com/Codebucket-Solutions/node-template#readme",
 	"dependencies": {
+		"@codebucket/files": "^1.0.0",
+		"@codebucket/mail-transport": "^1.0.0",
+		"@codebucket/sms": "^1.0.0",
 		"@codebucket/azure-env": "^1.0.2",
 		"@codebucket/logserver-transport": "^1.0.2",
 		"aws-sdk": "^2.1309.0",
@@ -53,6 +62,7 @@
 		"nodemailer": "^7.0.10",
 		"pino": "^8.20.0",
 		"pino-http": "^9.0.0",
+		"node-cron": "^4.2.1",
 		"pino-pretty": "^11.0.0",
 		"rate-limit-redis": "^4.3.0",
 		"redis": "^5.10.0",
@@ -62,15 +72,18 @@
 	"devDependencies": {
 		"eslint": "^9.39.1",
 		"eslint-config-prettier": "^10.1.8",
-		"eslint-plugin-filenames-simple": "^0.9.0",
 		"eslint-plugin-node": "^11.1.0",
 		"eslint-plugin-prettier": "^5.5.4",
 		"husky": "^9.1.7",
 		"lint-staged": "^16.2.7",
-		"node-cron": "^4.2.1",
 		"nodemon": "^3.1.11",
 		"plop": "^3.1.1",
 		"prettier": "^3.5.3"
+	},
+	"overrides": {
+		"@codebucket/files": {
+			"mime": "3.0.0"
+		}
 	},
 	"lint-staged": {
 		"*.js": [
