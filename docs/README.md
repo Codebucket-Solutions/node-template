@@ -50,6 +50,10 @@ Deterministic setup and operational guidance for worktrees and CI.
 
 Instructions for configuring Codex app local environments and project actions.
 
+### [OpenTelemetry Stub](./opentelemetry.md)
+
+Overview of the disabled-by-default OpenTelemetry bootstrap hook and how to replace it with a real SDK configuration.
+
 ## Coming Soon
 
 Additional documentation will be added for:

@@ -1,45 +1,45 @@
 name: Build and Push Docker Image
 
 on:
-  push:
-    branches:
-      - stage
+    push:
+        branches:
+            - stage
 
 env:
-  DOCKER_REPO: node-template
-  DOCKER_IMAGE: stage
+    DOCKER_REPO: node-template
+    DOCKER_IMAGE: stage
 
 jobs:
-  build:
-    runs-on: ${{ vars.DOCKER_BUILD_RUNNER }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+    build:
+        runs-on: ${{ vars.DOCKER_BUILD_RUNNER }}
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
 
-      - name: Log in to Harbor
-        run: echo "${{ secrets.HARBOR_PASSWORD }}" | docker login https://harbor.internal.codebuckets.in -u '${{ secrets.HARBOR_USER }}' --password-stdin
+            - name: Log in to Harbor
+              run: echo "${{ secrets.HARBOR_PASSWORD }}" | docker login https://harbor.internal.codebuckets.in -u '${{ secrets.HARBOR_USER }}' --password-stdin
 
-      - name: Build Docker image
-        run: docker build -t harbor.internal.codebuckets.in/${{ env.DOCKER_REPO }}/${{ env.DOCKER_IMAGE }}:latest . -f Dockerfile
+            - name: Build Docker image
+              run: docker build -t harbor.internal.codebuckets.in/${{ env.DOCKER_REPO }}/${{ env.DOCKER_IMAGE }}:latest . -f Dockerfile
 
-      - name: Push Docker image
-        run: docker push harbor.internal.codebuckets.in/${{ env.DOCKER_REPO }}/${{ env.DOCKER_IMAGE }}:latest
+            - name: Push Docker image
+              run: docker push harbor.internal.codebuckets.in/${{ env.DOCKER_REPO }}/${{ env.DOCKER_IMAGE }}:latest
 
-      - name: Log out from Harbor
-        run: docker logout https://harbor.internal.codebuckets.in
+            - name: Log out from Harbor
+              run: docker logout https://harbor.internal.codebuckets.in
 
-  deploy:
-    runs-on: dev-server
-    needs: build
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+    deploy:
+        runs-on: dev-server
+        needs: build
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
 
-      - name: Pull new Image
-        run: docker compose -f docker-compose.yml pull
+            - name: Pull new Image
+              run: docker compose -f docker-compose.yml pull
 
-      - name: Remove old containers
-        run: docker compose -f docker-compose.yml down || true
+            - name: Remove old containers
+              run: docker compose -f docker-compose.yml down || true
 
-      - name: Start Container
-        run: docker compose -f docker-compose.yml up -d
+            - name: Start Container
+              run: docker compose -f docker-compose.yml up -d

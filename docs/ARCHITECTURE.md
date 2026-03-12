@@ -5,7 +5,7 @@ This repository is an additive enhancement of the existing Node.js backend templ
 ## Runtime architecture
 
 ```text
-Request -> Routes -> Middleware -> Controllers -> Services -> Models -> Database
+Process bootstrap -> Optional instrumentation -> Request -> Routes -> Middleware -> Controllers -> Services -> Models -> Database
 ```
 
 ## Harness-engineering overlay
@@ -24,6 +24,7 @@ The repository also includes a repo-native operating layer designed for Codex an
 Application code and repo operations are separate concerns:
 
 - App code continues to live in `app.js`, `routes/`, `middleware/`, `models/`, `helper/`, and `utils/`.
+- Optional runtime instrumentation bootstrap lives in `instrumentation/` and is loaded from `bin/www` before `app.js`.
 - Stateful business workflows can be implemented in `service/v1/` with Sequelize models backing assignment, workflow action, and escalation rules.
 - Agent operating guidance lives in repo-root docs and scripts.
 

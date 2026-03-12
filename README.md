@@ -73,6 +73,7 @@ node-template/
 ├── controllers/               # Request handlers (versioned)
 │   └── v1/
 ├── helper/                    # Helper utilities
+├── instrumentation/           # Optional runtime bootstrap hooks (OpenTelemetry stub)
 ├── middleware/                # Express middleware
 │   ├── auth.js                # JWT authentication
 │   ├── validator.js           # Request validation
@@ -171,6 +172,14 @@ Joi-based schema validation middleware for request body, query, and params valid
 - **Pino** for high-performance structured logging
 - **Custom log server transport** (`@codebucket/logserver-transport`)
 - Request/response logging with correlation IDs
+
+### 4.1 **Observability Bootstrap Stub** 📡
+
+- Disabled-by-default OpenTelemetry bootstrap in `instrumentation/opentelemetry.js`
+- Worker startup loads the stub before `app.js`, which is where a real SDK should be initialized
+- Shutdown hook included so future exporters can flush on `SIGINT` and `SIGTERM`
+
+📖 **[View OpenTelemetry stub guide →](./docs/opentelemetry.md)**
 
 ### 5. **Database Management** 🗄️
 

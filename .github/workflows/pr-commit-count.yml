@@ -1,40 +1,40 @@
 name: Check PR Commit Count
 
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
+    pull_request:
+        types: [opened, synchronize, reopened]
 
 jobs:
-  check-commit-count:
-    name: Enforce Commit Limit
-    runs-on: ${{ vars.GENERIC_RUNNER }}
+    check-commit-count:
+        name: Enforce Commit Limit
+        runs-on: ${{ vars.GENERIC_RUNNER }}
 
-    env:
-      MAX_COMMIT_COUNT: ${{ vars.MAX_COMMIT_COUNT }}
-
-    steps:
-      - name: Checkout base branch
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.base_ref }}
-
-      - name: Fetch PR branch
-        run: |
-          git fetch origin ${{ github.head_ref }}:${{ github.head_ref }}
-
-      - name: Count commits in PR
-        id: count_commits
-        run: |
-          COMMIT_COUNT=$(git rev-list --count origin/${{ github.base_ref }}..${{ github.head_ref }})
-          echo "🔢 Commit count in PR: $COMMIT_COUNT"
-          echo "commit_count=$COMMIT_COUNT" >> $GITHUB_ENV
-
-      - name: Block PR if commit count exceeds limit
-        if: env.commit_count > env.MAX_COMMIT_COUNT
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          COMMENT="❌ This PR has **${{ env.commit_count }}** commits, which exceeds the limit of ${{ env.MAX_COMMIT_COUNT }}. Please squash your commits before merging."
-          gh pr comment ${{ github.event.pull_request.number }} --body "$COMMENT"
-          echo "❌ Too many commits ($COMMIT_COUNT). Please squash them to ${{ env.MAX_COMMIT_COUNT }} or fewer."
-          exit 1
+            MAX_COMMIT_COUNT: ${{ vars.MAX_COMMIT_COUNT }}
+
+        steps:
+            - name: Checkout base branch
+              uses: actions/checkout@v4
+              with:
+                  ref: ${{ github.base_ref }}
+
+            - name: Fetch PR branch
+              run: |
+                  git fetch origin ${{ github.head_ref }}:${{ github.head_ref }}
+
+            - name: Count commits in PR
+              id: count_commits
+              run: |
+                  COMMIT_COUNT=$(git rev-list --count origin/${{ github.base_ref }}..${{ github.head_ref }})
+                  echo "🔢 Commit count in PR: $COMMIT_COUNT"
+                  echo "commit_count=$COMMIT_COUNT" >> $GITHUB_ENV
+
+            - name: Block PR if commit count exceeds limit
+              if: env.commit_count > env.MAX_COMMIT_COUNT
+              env:
+                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: |
+                  COMMENT="❌ This PR has **${{ env.commit_count }}** commits, which exceeds the limit of ${{ env.MAX_COMMIT_COUNT }}. Please squash your commits before merging."
+                  gh pr comment ${{ github.event.pull_request.number }} --body "$COMMENT"
+                  echo "❌ Too many commits ($COMMIT_COUNT). Please squash them to ${{ env.MAX_COMMIT_COUNT }} or fewer."
+                  exit 1

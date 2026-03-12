@@ -1,0 +1,16 @@
+trusted = true
+
+[local_environment]
+setup = "npm ci || npm install\nnpm run worktree:bootstrap"
+
+[actions.verify]
+command = "npm run verify"
+
+[actions.start_dev]
+command = "npm run start:dev"
+
+[actions.docs_validate]
+command = "npm run docs:validate"
+
+[actions.quality_score]
+command = "npm run quality:score"
