@@ -1,7 +1,10 @@
-const fs = require("fs");
-const path = require("path");
-const { Files } = require("@codebucket/files");
+const path = require("node:path");
+const multer = require("multer");
+const { Files, createMulterUploader } = require("@codebucket/files");
+const { ErrorHandler, statusCodes } = require("../helper");
 const { SUCCESS } = require("./constant");
+
+const { BAD_REQUEST = 400 } = statusCodes;
 
 let filesConfig;
 if (process.env.UPLOAD_SERVER === "S3") {
@@ -26,42 +29,152 @@ if (process.env.UPLOAD_SERVER === "S3") {
 	};
 }
 
-const fileStorage = new Files(filesConfig);
+const uploader = new Files(filesConfig);
+
+function sanitizeFilename(filename) {
+	const ext = path.extname(filename || "").toLowerCase();
+	return `${Date.now()}-${Math.round(Math.random() * 1e9)}${ext}`;
+}
+
+function getUploadPrefix() {
+	return String(process.env.prefix || "uploads").replace(/^\/+|\/+$/g, "");
+}
+
+function buildUploadKey(directory, filename) {
+	return `/${getUploadPrefix()}/${directory}/${sanitizeFilename(filename)}`;
+}
+
+function createUploadStorage(options = {}) {
+	const { directory = "uploads", key } = options;
+
+	return createMulterUploader(uploader, {
+		key:
+			key ||
+			((req, file) => {
+				return buildUploadKey(directory, file.originalname);
+			}),
+		keepBuffer: false,
+	});
+}
+
+function createMulterUpload(options = {}) {
+	const { storage, directory, fileFilter, limits } = options;
+	const resolvedStorage = storage || createUploadStorage({ directory, key: options.key });
+
+	return multer({
+		storage: resolvedStorage,
+		fileFilter,
+		limits,
+	});
+}
+
+function createSingleUpload(options = {}) {
+	const { fieldName = "file", ...multerOptions } = options;
+	return createMulterUpload(multerOptions).single(fieldName);
+}
+
+function createArrayUpload(options = {}) {
+	const { fieldName = "files", maxCount = 10, ...multerOptions } = options;
+	return createMulterUpload(multerOptions).array(fieldName, maxCount);
+}
+
+function handleMulterUpload(uploadFn, options = {}) {
+	const { fileSizeMessage = "File size exceeds the allowed limit" } = options;
+
+	return (req, res, next) => {
+		uploadFn(req, res, err => {
+			if (err instanceof multer.MulterError) {
+				if (err.code === "LIMIT_FILE_SIZE") {
+					return next(new ErrorHandler(BAD_REQUEST, fileSizeMessage));
+				}
+
+				return next(new ErrorHandler(BAD_REQUEST, err.message));
+			}
+
+			if (err) {
+				return next(err);
+			}
+
+			return next();
+		});
+	};
+}
+
+function isUploadedFile(file) {
+	return Boolean(
+		file &&
+			typeof file === "object" &&
+			("originalname" in file || "fieldname" in file) &&
+			("location" in file || "key" in file || "path" in file),
+	);
+}
+
+function normalizeUploadedFiles(files, fieldName) {
+	if (!files) {
+		return [];
+	}
+
+	if (Array.isArray(files)) {
+		return files.filter(Boolean);
+	}
+
+	if (fieldName && Array.isArray(files[fieldName])) {
+		return files[fieldName].filter(Boolean);
+	}
+
+	if (fieldName && files[fieldName]) {
+		return [files[fieldName]];
+	}
+
+	if (isUploadedFile(files)) {
+		return [files];
+	}
+
+	return Object.values(files).flatMap(value => {
+		if (Array.isArray(value)) {
+			return value.filter(Boolean);
+		}
+
+		return value ? [value] : [];
+	});
+}
+
+function formatUploadedFile(file) {
+	const key = file.key || file.filename || null;
+	const url = key ? uploader.getPublicUrl(key) : file.location || file.path || null;
+
+	return {
+		message: SUCCESS,
+		url,
+		location: file.location || file.path || null,
+		name: path.posix.basename(key || file.originalname || "upload"),
+		originalName: file.originalname || null,
+		key,
+		size: file.size,
+		mimetype: file.mimetype,
+		fieldname: file.fieldname,
+	};
+}
 
 module.exports = {
-	fileUpload: async (files, body, _key) => {
-		let filePath;
+	fileUpload: async (files, _body, fieldName) => {
 		try {
-			filePath = files?.path;
-			const fileName =
-				new Date()
-					.toISOString()
-					.replace(/:/g, "-")
-					.replace(/[^a-z0-9]/gi, "_")
-					.toLowerCase() + path.extname(files.originalname);
+			const uploadedFiles = normalizeUploadedFiles(files, fieldName);
+			if (uploadedFiles.length === 0) {
+				throw new Error("Missing uploaded file");
+			}
 
-			await fileStorage.upload(
-				`/${process.env.prefix}/${body.userId}/${fileName}`,
-				fs.readFileSync(files.path),
-			);
-
-			const url = fileStorage.getPublicUrl(
-				`/${process.env.prefix}/${body.userId}/${fileName}`,
-			);
+			if (uploadedFiles.length === 1) {
+				return formatUploadedFile(uploadedFiles[0]);
+			}
 
 			return {
 				message: SUCCESS,
-				url,
-				name: fileName,
+				files: uploadedFiles.map(formatUploadedFile),
 			};
 		} catch (error) {
 			console.error(error);
-		} finally {
-			if (filePath) {
-				fs.promises.unlink(filePath).catch(() => {
-					// ignore cleanup errors
-				});
-			}
+			return 0;
 		}
 	},
 	fileDownload: async (req, res) => {
@@ -138,7 +251,7 @@ module.exports = {
 
 		try {
 			console.log("[fileDownload]", { normalized });
-			await fileStorage.download(normalized, res);
+			await uploader.download(normalized, res);
 
 			if (!res.headersSent) {
 				process.nextTick(() => {
@@ -176,4 +289,14 @@ module.exports = {
 			res.writeHead = originalWriteHead;
 		}
 	},
+	uploader,
+	fileStorage: uploader,
+	sanitizeFilename,
+	buildUploadKey,
+	createUploadStorage,
+	createMulterUpload,
+	createSingleUpload,
+	createArrayUpload,
+	handleMulterUpload,
+	uploadMiddleware: createMulterUpload(),
 };

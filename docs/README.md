@@ -26,6 +26,14 @@ Complete guide for using the environment-aware rate limiting system with example
 - Redis configuration
 - Testing and monitoring
 
+### [Pagination](./pagination.md)
+
+Guide for building offset and cursor pagination with `pagi-help/v2` through the shared service-layer utility.
+
+### [Canonical Integrations](./integrations.md)
+
+Guide for the package-backed uploads, SMS, mail, PDF, and pagination patterns that the template expects contributors to reuse.
+
 ### [Architecture](./ARCHITECTURE.md)
 
 Repository architecture plus the additive harness-engineering layer for Codex.

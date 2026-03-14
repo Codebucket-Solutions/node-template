@@ -1,4 +1,5 @@
 module.exports = {
+	BAD_REQUEST: 400,
 	BAD_GATEWAY: 400,
 	OK: 200,
 	CREATED: 201,

@@ -91,22 +91,34 @@ module.exports = router;
 
 ### Example 2: File Upload Routes
 
-**File**: `routes/v1/upload/upload.js`
+**File**: `routes/v1/examples/upload.js`
 
 ```javascript
 const express = require("express");
 const router = express.Router();
 const { dispatcher, uploadLimiter, validateToken } = require("../../../middleware");
-const { uploadFile, uploadMultiple } = require("../../../controllers/v1/upload");
+const { uploadExample } = require("../../../controllers/v1/examples/upload");
+const {
+	createMimeTypeFilter,
+	createSingleUploadMiddleware,
+} = require("../../../middleware/multer");
 const { PERMS, RESOURCES } = require("../../../utils/constant");
 
-// Apply upload rate limiting to prevent abuse
-router.post("/single", validateToken, uploadLimiter, (req, res, next) =>
-	dispatcher(req, res, next, uploadFile, RESOURCES.UPLOAD, PERMS.ADD),
-);
+const uploadExampleMiddleware = createSingleUploadMiddleware({
+	directory: "documents",
+	fieldName: "file",
+	fileFilter: createMimeTypeFilter({
+		allowedMimes: ["application/pdf"],
+		message: "Only PDF files are allowed",
+	}),
+	limits: {
+		fileSize: 10 * 1024 * 1024,
+	},
+});
 
-router.post("/multiple", validateToken, uploadLimiter, (req, res, next) =>
-	dispatcher(req, res, next, uploadMultiple, RESOURCES.UPLOAD, PERMS.ADD),
+// Apply upload rate limiting to prevent abuse
+router.post("/upload", validateToken, uploadLimiter, uploadExampleMiddleware, (req, res, next) =>
+	dispatcher(req, res, next, uploadExample, RESOURCES.UPLOAD, PERMS.ADD),
 );
 
 module.exports = router;

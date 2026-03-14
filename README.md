@@ -188,6 +188,24 @@ Joi-based schema validation middleware for request body, query, and params valid
 - **Model auto-initialization** with migration support
 - **Connection pooling** (max 1000 connections)
 
+### 5.1 **Pagination Queries** 📄
+
+- **`pagi-help/v2`** for offset and cursor pagination query generation
+- Shared helper exported from `utils/pagination.js`
+- Service-layer usage keeps SQL pagination logic out of routes and controllers
+
+📖 **[View pagination guide →](./docs/pagination.md)**
+
+### 5.2 **Canonical Integrations** 🔌
+
+- **`@codebucket/files`** for uploads and file delivery
+- **`@codebucket/sms`** for SMS provider abstraction
+- **`@codebucket/mail-transport`** for gateway email transport
+- **`@codebucket/puppet-master`** for HTML-to-PDF rendering
+- Example request flows under `routes/v1/examples/`, `controllers/v1/examples/`, and `service/v1/examples/`
+
+📖 **[View integration guide →](./docs/integrations.md)**
+
 ### 6. **Security** 🔒
 
 - **Helmet.js** - Security headers
@@ -223,8 +241,8 @@ npm run plop
 
 ### 9. **File Upload** 📤
 
-- **Formidable** for multipart form handling
-- **AWS S3** integration
+- **Multer** for multipart form handling
+- **`@codebucket/files`** for filesystem and S3-compatible storage
 - **Virus scanning** support (ClamAV)
 - **Upload rate limiting**
 
@@ -239,11 +257,15 @@ npm run plop
 
 ### 10. **Email Notifications** 📧
 
-- **Nodemailer** with Zoho SMTP
+- **Nodemailer** with Zoho SMTP or **`@codebucket/mail-transport`**
 - **OTP templates** (`sys_otp_template` model)
 - Template-based email rendering
 
-### 11. **Clustering** 🔄
+### 11. **PDF Rendering** 🧾
+
+- **`@codebucket/puppet-master`** for HTML-to-PDF rendering through the shared Puppet Master service
+
+### 12. **Clustering** 🔄
 
 Multi-core support using Node.js cluster module for improved performance and scalability.
 
@@ -298,18 +320,45 @@ EMAIL_PASSWORD=your_email_password
 # Mail server transport (used when EMAIL_TRANSPORT is not SMTP)
 MAILSERVER_URL=
 MAILSERVER_SENDERID=
+MAILSERVER_ACCESS_TOKEN=
+# Backward-compatible alias still accepted:
 MAILSERVER_ACCESSTOKEN=
 
 # SMS
 SMS_TRANSPORT=GOVT
+# SMS server transport
 SMS_SERVER_URL=
 SMS_SENDER_ID=
 SMS_ACCESS_TOKEN=
-PASSWORDSMS=
+
+# Mgov transport (canonical names)
+MGOV_URL=
+MGOV_USERNAME=
+MGOV_PASSWORD=
+MGOV_SENDER_ID=
+MGOV_SECURE_KEY=
+# Backward-compatible aliases still accepted:
 ENDPOINT=
-KEY=
-SENDERID=
 USERNAMESMS=
+PASSWORDSMS=
+SENDERID=
+KEY=
+
+# Msg91 transport
+MSG91_AUTH_KEY=
+MSG91_SENDER_ID=
+MSG91_ROUTE=
+MSG91_COUNTRY=91
+
+# SmartSol transport
+SMARTSOL_API_KEY=
+SMARTSOL_MASK=
+SMARTSOL_PEID=
+SMARTSOL_USE_GET=false
+
+# PDF rendering
+PUPPET_MASTER_BASE_URL=
+PUPPET_MASTER_API_KEY=
 
 # Redis (Production Rate Limiting)
 REDIS_HOST=127.0.0.1

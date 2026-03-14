@@ -27,5 +27,8 @@ const payload = {
 
 const outDir = path.join(process.cwd(), "docs", "references");
 fs.mkdirSync(outDir, { recursive: true });
-fs.writeFileSync(path.join(outDir, "quality-score.json"), JSON.stringify(payload, null, 2));
+fs.writeFileSync(
+	path.join(outDir, "quality-score.json"),
+	`${JSON.stringify(payload, null, "\t")}\n`,
+);
 console.log(`Quality score generated: ${score}`);

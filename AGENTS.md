@@ -25,7 +25,6 @@ This repository is a Node.js backend template maintained for human developers an
 - Update docs when behavior, architecture, or workflow changes.
 - Run verification before declaring work done.
 
-
 ## Definition of done
 
 A task is complete only when:
@@ -53,3 +52,23 @@ A task is complete only when:
 
 - Preserve the existing non-agentic template structure and behavior.
 - Additive improvements are preferred to replacements.
+
+## Canonical integrations
+
+- Use `@codebucket/files` through `utils/upload.js` and `middleware/multer.js`
+  for file uploads and downloads. Do not introduce `formidable`, raw S3 upload
+  clients, or parallel temp-file pipelines when this integration fits.
+- Use `@codebucket/sms` through `utils/message.js` for SMS delivery. Do not add
+  provider-specific HTTP clients directly in controllers or services.
+- Use `@codebucket/mail-transport` through `utils/mail.js` with Nodemailer for
+  non-SMTP gateway email delivery. Do not hand-roll direct gateway calls when
+  this transport fits.
+- Use `@codebucket/puppet-master` through `utils/pdf.js` for HTML-to-PDF
+  rendering. Do not add local Puppeteer or Playwright PDF stacks for the same
+  job.
+- Use `pagi-help/v2` through `utils/pagination.js` for offset and cursor
+  pagination query generation. Do not hand-build `LIMIT`/`OFFSET`, count
+  queries, or cursor token SQL if the package can do the work.
+- Check `routes/v1/examples/`, `controllers/v1/examples/`, and
+  `service/v1/examples/` before implementing these behaviors elsewhere. Extend
+  those patterns instead of creating parallel ones.
