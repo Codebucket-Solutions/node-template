@@ -16,9 +16,15 @@ This repository is a Node.js backend template maintained for human developers an
 - Keep changes small and verifiable.
 - Do not delete existing template features unless the task explicitly requires it.
 - Prefer extending existing patterns over introducing parallel patterns.
+- Before adding backend behavior, inspect and extend the existing bootstrap and request path first:
+  `bin/www` -> `init.js` -> `app.js` -> `middleware/` -> `routes/` -> `controllers/` -> `service/` -> `db/`.
+- Do not introduce alternate startup flows, duplicate middleware stacks, or temporary persistence layers when the template already has a place for the behavior.
 - Read a file before changing it.
+- Create or update an execution plan before starting any non-trivial work.
+- Keep the execution plan current while implementing the task.
 - Update docs when behavior, architecture, or workflow changes.
 - Run verification before declaring work done.
+
 
 ## Definition of done
 
