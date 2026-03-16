@@ -20,6 +20,8 @@ const checks = [
 	],
 	[".codex/config.toml", fs.existsSync(".codex/config.toml")],
 	["scripts/worktree-bootstrap.sh", fs.existsSync("scripts/worktree-bootstrap.sh")],
+	["scripts/dev-stack.js", fs.existsSync("scripts/dev-stack.js")],
+	["scripts/worktree-context.js", fs.existsSync("scripts/worktree-context.js")],
 	["scripts/smoke-server.js", fs.existsSync("scripts/smoke-server.js")],
 	["scripts/run-migrations.js", fs.existsSync("scripts/run-migrations.js")],
 	["scripts/new-migration.js", fs.existsSync("scripts/new-migration.js")],

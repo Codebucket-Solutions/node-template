@@ -12,6 +12,9 @@ command = "npm run migrate"
 [actions.migrate_status]
 command = "npm run migrate:status"
 
+[actions.claim_check]
+command = "npm run claim:check"
+
 [actions.test]
 command = "npm run test"
 

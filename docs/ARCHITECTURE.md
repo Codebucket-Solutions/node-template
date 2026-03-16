@@ -32,7 +32,7 @@ Application code and repo operations are separate concerns:
 - Package-backed integrations for uploads, SMS, mail, PDF rendering, and pagination live in `utils/`, with mounted example flows under `routes/v1/examples/`, `controllers/v1/examples/`, and `service/v1/examples/`.
 - Shared SQL pagination query generation belongs in `utils/pagination.js`, backed by `pagi-help/v2`, so services do not hand-roll `LIMIT`/`OFFSET`, count, or cursor query fragments.
 - Runtime observability bootstrap lives in `instrumentation/` and is loaded from `bin/www` before `app.js`.
-- Migration execution lives in `config/migrator.js`, runs from `init.js` during master startup with `sync: true`, and is also exposed through npm scripts instead of direct ad hoc DB changes.
+- Migration execution lives in `config/migrator.js`, runs from `init.js` during master startup with `sync: true`, and is also exposed through npm scripts instead of direct ad hoc DB changes. Startup bootstrap is guarded so it only runs automatically against the expected worktree-local DB target unless `ALLOW_NON_LOCAL_STARTUP_DB_BOOTSTRAP=true` is set for an intentional deployment-style environment. Local agent workflows may bypass that startup bootstrap with `SKIP_STARTUP_MIGRATIONS=true` when they intentionally do not need DB-backed startup behavior.
 - A lightweight unauthenticated health endpoint lives at `GET /v1/health` so smoke tests can verify startup without requiring seeded DB permissions.
 - Stateful business workflows can be implemented in `service/v1/` with Sequelize models backing assignment, workflow action, and escalation rules.
 - Agent operating guidance lives in repo-root docs and scripts.

@@ -12,20 +12,23 @@ This template includes an additive local observability harness for backend work:
 Start the local stack with:
 
 ```sh
+npm run worktree:bootstrap
 npm run dev:stack:up
 ```
 
-This starts:
+This starts a worktree-local stack. The exact host ports are written to `.env.worktree` so multiple worktrees can run side by side without reusing the same fixed port bindings.
 
-- MySQL on `127.0.0.1:3306`
-- Redis on `127.0.0.1:6379`
-- Grafana LGTM on:
-    - Grafana: `http://127.0.0.1:3001`
-    - Loki: `http://127.0.0.1:3100`
-    - Tempo: `http://127.0.0.1:3200`
-    - OTLP gRPC: `127.0.0.1:4317`
-    - OTLP HTTP: `127.0.0.1:4318`
-    - Prometheus API: `http://127.0.0.1:9090`
+The generated worktree values include:
+
+- `DB_PORT`
+- `REDIS_PORT`
+- `GRAFANA_PORT`
+- `LOKI_PORT`
+- `TEMPO_PORT`
+- `OTLP_GRPC_PORT`
+- `OTLP_HTTP_PORT`
+- `PROMETHEUS_PORT`
+- `COMPOSE_PROJECT_NAME`
 
 Stop it with:
 
@@ -40,6 +43,8 @@ npm run dev:stack:down
 That file gives each worktree:
 
 - a deterministic `PORT`,
+- a worktree-local `COMPOSE_PROJECT_NAME`,
+- worktree-local service ports for MySQL, Redis, and observability,
 - a unique `OTEL_SERVICE_NAME`,
 - default local URLs for Loki, Prometheus, Tempo, and OTLP,
 - and a startup smoke-test budget.

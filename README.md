@@ -29,6 +29,7 @@ This template now includes an additive repository operating layer for Codex and 
 ```bash
 npm run worktree:bootstrap
 npm run dev:stack:up
+npm run claim:check
 npm run verify
 npm run plan:new -- --slug=my-task --title="My Task"
 ```
@@ -64,7 +65,7 @@ npm run dev:stack:up
 npm run start:dev
 ```
 
-The server will start on the `PORT` defined in `.env.worktree` or `.env.development`. `npm run worktree:bootstrap` creates a deterministic `.env.worktree` if it does not exist.
+The server will start on the `PORT` defined in `.env.worktree` or `.env.development`. `npm run worktree:bootstrap` creates a deterministic `.env.worktree` with worktree-local stack ports and a compose project name if it does not exist.
 
 ---
 
@@ -196,6 +197,7 @@ Joi-based schema validation middleware for request body, query, and params valid
 - **Model auto-initialization** with migration support
 - **Umzug-backed migrations** with generator and runner scripts
 - **Master startup schema bootstrap and migration application** before worker boot
+- **Startup DB guardrails** that allow automatic bootstrap only against the worktree-local DB stack or an explicit deployment override
 - **Connection pooling** (max 1000 connections)
 
 📖 **[View migration guide →](./docs/MIGRATIONS.md)**

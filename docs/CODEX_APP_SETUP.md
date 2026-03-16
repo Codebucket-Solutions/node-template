@@ -15,6 +15,8 @@ npm ci || npm install
 npm run worktree:bootstrap
 ```
 
+`npm run worktree:bootstrap` creates `.env.worktree` with worktree-local app and stack ports plus a unique compose project name, so Codex worktrees do not fight over the same local Docker resources.
+
 ## 3. Add project actions
 
 Recommended actions:
@@ -27,6 +29,7 @@ Recommended actions:
 - Start dev server -> `npm run start:dev`
 - Dev stack up -> `npm run dev:stack:up`
 - Dev stack down -> `npm run dev:stack:down`
+- Claim check -> `npm run claim:check`
 - Architecture inventory -> `npm run architecture:inventory`
 - Validate docs -> `npm run docs:validate`
 - Score quality -> `npm run quality:score`
@@ -68,3 +71,27 @@ npm run migrate
 ```
 
 Repository guidance lives in [`docs/MIGRATIONS.md`](./MIGRATIONS.md). Do not add a parallel migration tool or alternate schema-change workflow.
+
+If a local task needs the app to boot without running startup DB bootstrap, use:
+
+```sh
+SKIP_STARTUP_MIGRATIONS=true npm run start:dev
+```
+
+This is a local-only escape hatch for agent workflows. Do not use it in deployment.
+
+If startup bootstrap is meant to target a non-worktree database in deployment, set:
+
+```sh
+ALLOW_NON_LOCAL_STARTUP_DB_BOOTSTRAP=true npm run start
+```
+
+Without that override, `init.js` only bootstraps against the expected worktree-local DB target while it is reachable.
+
+## 8. Claim non-trivial tasks in `docs/exec-plans/`
+
+Before making a medium or large change:
+
+1. Run `npm run claim:check` and inspect `docs/exec-plans/active/` for overlapping claim scopes.
+2. Create or update a plan with `npm run plan:new -- --slug=<slug> --title="<title>"`.
+3. Fill the claim metadata so other agents can see the owner, branch, worktree, and scope. Prefer concrete files, paths, domains, or behaviors in `Claim Scope` so overlap warnings are useful.

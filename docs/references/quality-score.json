@@ -1,8 +1,8 @@
 {
-	"generatedAt": "2026-03-16T18:27:14.279Z",
+	"generatedAt": "2026-03-16T19:05:42.198Z",
 	"score": 100,
-	"passed": 22,
-	"total": 22,
+	"passed": 24,
+	"total": 24,
 	"checks": [
 		{
 			"name": "AGENTS.md",
@@ -62,6 +62,14 @@
 		},
 		{
 			"name": "scripts/worktree-bootstrap.sh",
+			"ok": true
+		},
+		{
+			"name": "scripts/dev-stack.js",
+			"ok": true
+		},
+		{
+			"name": "scripts/worktree-context.js",
 			"ok": true
 		},
 		{

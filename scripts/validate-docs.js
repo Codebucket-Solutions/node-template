@@ -59,6 +59,29 @@ function validatePlanStatuses(dirName, expectedStatus) {
 			);
 			failed = true;
 		}
+
+		const requiredMarkers = [
+			"- Owner:",
+			"- Claim Scope:",
+			"- Claim Worktree:",
+			"- Claim Branch:",
+			"- Claim Status:",
+			"- Claim Updated At:",
+			"## Goal",
+			"## Acceptance criteria",
+			"## Coordination notes",
+			"## Checklist",
+			"## Verification notes",
+		];
+
+		for (const marker of requiredMarkers) {
+			if (!content.includes(marker)) {
+				console.error(
+					`Plan file ${path.relative(root, fullPath)} must contain "${marker}"`,
+				);
+				failed = true;
+			}
+		}
 	}
 }
 

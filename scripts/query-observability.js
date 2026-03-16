@@ -1,4 +1,7 @@
+const { loadEnvironment } = require("../config/load-env");
 const axios = require("axios");
+
+loadEnvironment(process.env.NODE_ENV);
 
 function parseArgs(argv) {
 	const [signalType, ...rest] = argv;

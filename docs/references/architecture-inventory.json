@@ -1,8 +1,8 @@
 {
-	"generatedAt": "2026-03-16T18:27:13.984Z",
+	"generatedAt": "2026-03-16T19:05:41.926Z",
 	"runtimeLayers": {
 		"bin": 1,
-		"config": 3,
+		"config": 4,
 		"migrations": 0,
 		"routes": 1,
 		"controllers": 1,
@@ -23,7 +23,7 @@
 		"rootDocs": 15,
 		"designDocs": 2,
 		"productSpecs": 2,
-		"activePlans": 0,
+		"activePlans": 1,
 		"completedPlans": 0
 	}
 }
