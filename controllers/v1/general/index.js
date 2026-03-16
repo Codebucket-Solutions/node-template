@@ -1,2 +1,4 @@
 const { createApi } = require("./general");
-module.exports = { createApi };
+const { getHealth } = require("./health");
+
+module.exports = { createApi, getHealth };

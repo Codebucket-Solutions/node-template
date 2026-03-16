@@ -9,8 +9,9 @@
 
 ## Codex safety guidance
 
-- Default Codex project configuration uses `approval_policy = "on-request"` and `sandbox_mode = "workspace-write"`.
 - Review shell commands that install packages, change Git state, or alter deployment files.
+- Keep `.env.worktree`, `.env.local`, and any service credentials uncommitted.
+- Treat local observability endpoints as development-only surfaces.
 
 ## Existing security-related template areas
 

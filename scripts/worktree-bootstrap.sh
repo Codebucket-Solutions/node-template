@@ -8,6 +8,9 @@ else
   exit 1
 fi
 
+node scripts/bootstrap-worktree-env.js
+node scripts/generate-architecture-inventory.js
+
 if npm run | grep -q " lint"; then
   npm run lint || true
 fi

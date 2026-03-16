@@ -16,9 +16,11 @@ This template now includes an additive repository operating layer for Codex and 
 - `AGENTS.md` for repo-level operating guidance
 - `.codex/config.toml` for trusted project-scoped Codex defaults
 - `docs/ARCHITECTURE.md`, `docs/WORKFLOW.md`, `docs/QUALITY.md`, `docs/SECURITY.md`, and `docs/RELIABILITY.md`
+- `docs/OBSERVABILITY.md` for local logs, metrics, traces, and query workflows
 - execution plans under `docs/exec-plans/`
 - deterministic worktree bootstrap script
-- repository verification and quality scoring scripts
+- repository verification, smoke, and quality scoring scripts
+- local developer stack in `docker-compose.dev.yml`
 - CI workflow for baseline enforcement
 - Codex app setup guide in `docs/CODEX_APP_SETUP.md`
 
@@ -26,6 +28,7 @@ This template now includes an additive repository operating layer for Codex and 
 
 ```bash
 npm run worktree:bootstrap
+npm run dev:stack:up
 npm run verify
 npm run plan:new -- --slug=my-task --title="My Task"
 ```
@@ -51,14 +54,17 @@ cd node-template
 npm install
 
 # Set up environment
-cp .env.development .env.local
-# Edit .env.local with your database credentials
+cp env.development.example .env.development
+npm run worktree:bootstrap
+
+# Optional: start MySQL, Redis, and the local observability stack
+npm run dev:stack:up
 
 # Run in development mode
 npm run start:dev
 ```
 
-The server will start on `http://localhost:9000` (configurable via `PORT` in `.env`).
+The server will start on the `PORT` defined in `.env.worktree` or `.env.development`. `npm run worktree:bootstrap` creates a deterministic `.env.worktree` if it does not exist.
 
 ---
 
@@ -69,11 +75,12 @@ node-template/
 ├── bin/
 │   └── www                    # Server entry point with clustering
 ├── config/
-│   └── db.js                  # Database configuration
+│   ├── db.js                  # Database configuration
+│   └── migrator.js            # Umzug migration runner
 ├── controllers/               # Request handlers (versioned)
 │   └── v1/
 ├── helper/                    # Helper utilities
-├── instrumentation/           # Optional runtime bootstrap hooks (OpenTelemetry stub)
+├── instrumentation/           # Optional runtime bootstrap hooks (OpenTelemetry)
 ├── middleware/                # Express middleware
 │   ├── auth.js                # JWT authentication
 │   ├── validator.js           # Request validation
@@ -82,6 +89,7 @@ node-template/
 │   ├── logger.js              # Request logging
 │   └── handle-error.js        # Error handling
 ├── models/                    # Sequelize models
+├── migrations/                # Timestamped schema changes
 ├── routes/                    # API routes (versioned)
 │   └── v1/
 ├── service/                   # Business logic layer
@@ -173,20 +181,24 @@ Joi-based schema validation middleware for request body, query, and params valid
 - **Custom log server transport** (`@codebucket/logserver-transport`)
 - Request/response logging with correlation IDs
 
-### 4.1 **Observability Bootstrap Stub** 📡
+### 4.1 **Observability Harness** 📡
 
 - Disabled-by-default OpenTelemetry bootstrap in `instrumentation/opentelemetry.js`
-- Worker startup loads the stub before `app.js`, which is where a real SDK should be initialized
-- Shutdown hook included so future exporters can flush on `SIGINT` and `SIGTERM`
+- Local developer stack for MySQL, Redis, Grafana, Loki, Tempo, and OTLP ingestion in `docker-compose.dev.yml`
+- Terminal query helper for logs, metrics, and traces in `scripts/query-observability.js`
 
-📖 **[View OpenTelemetry stub guide →](./docs/opentelemetry.md)**
+📖 **[View observability guide →](./docs/OBSERVABILITY.md)**
 
 ### 5. **Database Management** 🗄️
 
 - **Sequelize ORM** with MySQL support
 - **Transaction support** using CLS (Continuation Local Storage)
 - **Model auto-initialization** with migration support
+- **Umzug-backed migrations** with generator and runner scripts
+- **Master startup schema bootstrap and migration application** before worker boot
 - **Connection pooling** (max 1000 connections)
+
+📖 **[View migration guide →](./docs/MIGRATIONS.md)**
 
 ### 5.1 **Pagination Queries** 📄
 
@@ -222,6 +234,7 @@ Joi-based schema validation middleware for request body, query, and params valid
 - **EditorConfig** - Consistent editor settings across IDEs
 - **Pre-commit hooks** - Automatic linting before commits
 - **IDE integration** - VSCode, WebStorm, and others
+- **Health and smoke verification** - Runtime boot checks in `npm run verify`
 
 📖 **[View code quality guide →](./docs/code-quality.md)**
 
@@ -286,15 +299,27 @@ npm run start:16
 # Code generation
 npm run plop
 
+# Local developer stack
+npm run dev:stack:up
+
+# Schema migrations
+npm run migration:new -- --name=create-example-table
+npm run migrate
+npm run migrate:status
+
 # Testing
-npm run test:dev
+npm run test
+npm run test:smoke
+
+# Full verification
+npm run verify
 ```
 
 ---
 
 ## 🌍 Environment Variables
 
-Create `.env.development` or `.env.production`:
+Create `.env.development` or `.env.production`. `npm run worktree:bootstrap` also creates `.env.worktree` with deterministic local overrides:
 
 ```bash
 # Database

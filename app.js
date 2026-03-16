@@ -4,8 +4,9 @@ const path = require("path");
 const cors = require("cors");
 const helmet = require("helmet");
 const logger = require("./middleware/logger");
+const { loadEnvironment } = require("./config/load-env");
 
-require("dotenv").config({ path: `.env.${process.env.NODE_ENV}` });
+loadEnvironment(process.env.NODE_ENV);
 require("moment-timezone")().tz("Asia/Kolkata");
 
 const {
@@ -43,7 +44,7 @@ app.use(cors())
 app.use(trimMiddleware);
 app.use("/v1", v1);
 
-app.use((err, req, res) => {
+app.use((err, req, res, _next) => {
 	handleError(err, res);
 });
 

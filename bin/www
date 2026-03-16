@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 
-require("dotenv").config({ path: `.env.${process.env.NODE_ENV}` });
+const { loadEnvironment } = require("../config/load-env");
+
+loadEnvironment(process.env.NODE_ENV);
 
 /**
  * Module dependencies.

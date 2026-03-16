@@ -5,10 +5,17 @@ const root = process.cwd();
 const requiredFiles = [
 	"AGENTS.md",
 	"docs/ARCHITECTURE.md",
+	"docs/MIGRATIONS.md",
+	"docs/OBSERVABILITY.md",
 	"docs/WORKFLOW.md",
 	"docs/QUALITY.md",
 	"docs/SECURITY.md",
 	"docs/RELIABILITY.md",
+	"docs/design-docs/index.md",
+	"docs/product-specs/index.md",
+	"docs/exec-plans/tech-debt-tracker.md",
+	"migrations/README.md",
+	"docs/references/architecture-inventory.json",
 	".codex/config.toml",
 ];
 
@@ -26,6 +33,37 @@ if (!fs.existsSync(activePlansDir)) {
 	console.error("Missing active plans directory: docs/exec-plans/active");
 	failed = true;
 }
+
+const completedPlansDir = path.join(root, "docs", "exec-plans", "completed");
+if (!fs.existsSync(completedPlansDir)) {
+	console.error("Missing completed plans directory: docs/exec-plans/completed");
+	failed = true;
+}
+
+function validatePlanStatuses(dirName, expectedStatus) {
+	const dir = path.join(root, "docs", "exec-plans", dirName);
+	if (!fs.existsSync(dir)) {
+		return;
+	}
+
+	for (const entry of fs.readdirSync(dir)) {
+		if (!entry.endsWith(".md")) {
+			continue;
+		}
+
+		const fullPath = path.join(dir, entry);
+		const content = fs.readFileSync(fullPath, "utf8");
+		if (!content.includes(`- Status: ${expectedStatus}`)) {
+			console.error(
+				`Plan file ${path.relative(root, fullPath)} must contain "- Status: ${expectedStatus}"`,
+			);
+			failed = true;
+		}
+	}
+}
+
+validatePlanStatuses("active", "active");
+validatePlanStatuses("completed", "completed");
 
 if (failed) {
 	process.exit(1);

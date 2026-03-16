@@ -21,6 +21,20 @@ const consoleTransport = {
 	},
 };
 
+const lokiTransport = {
+	target: "pino-loki",
+	options: {
+		host: process.env.LOKI_URL,
+		labels: {
+			application: LOGSERVER_APPLICATION || "node-template",
+			service: LOGSERVER_SERVICE || "app",
+			environment: LOGSERVER_ENVIRONMENT || NODE_ENV || "development",
+		},
+		batching: true,
+		propsToLabels: ["level"],
+	},
+};
+
 // this sends to Logging Server (Not used in dev)
 const logServerTransport = {
 	target: "@codebucket/logserver-transport",
@@ -45,6 +59,13 @@ const logServerTransport = {
 };
 
 let targets = [consoleTransport];
+
+if (
+	process.env.LOKI_URL &&
+	["1", "true", "yes", "on"].includes(String(process.env.LOKI_ENABLED || "").toLowerCase())
+) {
+	targets = [consoleTransport, lokiTransport];
+}
 
 if (NODE_ENV === "STAGE" || NODE_ENV === "stage") {
 	targets = [consoleTransport, logServerTransport];

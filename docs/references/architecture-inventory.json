@@ -1,0 +1,29 @@
+{
+	"generatedAt": "2026-03-16T18:27:13.984Z",
+	"runtimeLayers": {
+		"bin": 1,
+		"config": 3,
+		"migrations": 0,
+		"routes": 1,
+		"controllers": 1,
+		"service": 2,
+		"middleware": 9,
+		"models": 12,
+		"utils": 15
+	},
+	"harness": {
+		"hasAgents": true,
+		"hasCodexConfig": true,
+		"hasCiWorkflow": true,
+		"hasDevStack": true,
+		"hasSmokeScript": true,
+		"hasObservabilityQueryScript": true
+	},
+	"documentation": {
+		"rootDocs": 15,
+		"designDocs": 2,
+		"productSpecs": 2,
+		"activePlans": 0,
+		"completedPlans": 0
+	}
+}

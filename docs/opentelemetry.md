@@ -1,17 +1,18 @@
-# OpenTelemetry Stub
+# OpenTelemetry Bootstrap
 
-This template includes an additive OpenTelemetry bootstrap stub in `instrumentation/opentelemetry.js`.
+This template includes an additive OpenTelemetry bootstrap in `instrumentation/opentelemetry.js`.
 
-The stub is intentionally disabled by default and does not install OpenTelemetry dependencies. Its purpose is to define the integration point for teams that want tracing or metrics without changing the default template runtime.
+The bootstrap is intentionally disabled by default. When enabled, it starts the OpenTelemetry Node SDK before `app.js` is loaded so traces and metrics can flow to an OTLP endpoint.
 
-## What the stub does
+## What the bootstrap does
 
 - Exposes `startOpenTelemetry()` and `shutdownOpenTelemetry()`.
 - Runs before `app.js` is loaded in worker processes from `bin/www`.
-- Logs when the stub is enabled so it is obvious that no real SDK is active yet.
+- Starts the OpenTelemetry Node SDK with auto-instrumentations.
+- Exports traces and metrics over OTLP HTTP.
 - Registers worker shutdown hooks for `SIGINT` and `SIGTERM`.
 
-## Enable the stub
+## Enable telemetry
 
 Set the following environment variable before starting the server:
 
@@ -19,21 +20,20 @@ Set the following environment variable before starting the server:
 OTEL_ENABLED=true
 ```
 
-Optional variables used by the stub:
+Optional variables used by the bootstrap:
 
-- `OTEL_SERVICE_NAME`: overrides the service name reported in the stub log entry.
-- `OTEL_EXPORTER_OTLP_ENDPOINT`: captured in logs so you can verify the intended exporter target during setup.
+- `OTEL_SERVICE_NAME`: overrides the service name reported in telemetry resources.
+- `OTEL_EXPORTER_OTLP_ENDPOINT`: OTLP HTTP base URL. Default: `http://127.0.0.1:4318`
+- `OTEL_METRIC_EXPORT_INTERVAL_MS`: metric export interval in milliseconds. Default: `10000`
 
-## Where to replace the stub
+## Local developer path
 
-Use `instrumentation/opentelemetry.js` as the single bootstrap file for your real OpenTelemetry setup.
+Use the local stack from [`docs/OBSERVABILITY.md`](./OBSERVABILITY.md):
 
-Recommended replacement approach:
-
-1. Install the official OpenTelemetry Node SDK packages your deployment needs.
-2. Initialize the SDK inside `startOpenTelemetry()` before `app.js` is required.
-3. Flush and shut down the SDK inside `shutdownOpenTelemetry()`.
-4. Keep `bin/www` as the only process bootstrap entry so tracing starts before Express, middleware, and outbound clients are loaded.
+1. Run `npm run dev:stack:up`.
+2. Set `OTEL_ENABLED=true`.
+3. Restart the application.
+4. Query runtime signals with `npm run obs:query -- <metrics|logs|traces> "<query>"`.
 
 ## Why startup happens in `bin/www`
 
@@ -41,6 +41,5 @@ Instrumentation has to load before the application imports modules that may be p
 
 ## Default behavior
 
-- No telemetry packages are required.
-- No traces or metrics are emitted.
+- No traces or metrics are emitted unless `OTEL_ENABLED=true`.
 - Existing request logging and runtime behavior stay unchanged unless `OTEL_ENABLED=true` is set.

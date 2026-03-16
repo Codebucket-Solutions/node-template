@@ -1,7 +1,10 @@
 const casbin = require("casbin");
 const path = require("path");
 const { SequelizeAdapter } = require("casbin-sequelize-adapter");
-module.exports = (async () => {
+
+let enforcerPromise;
+
+async function createCasbinEnforcer() {
 	const adapter = await SequelizeAdapter.newAdapter({
 		username: process.env.DB_USER,
 		password: process.env.DB_PASSWORD,
@@ -10,10 +13,20 @@ module.exports = (async () => {
 		dialect: "mysql",
 	});
 
-	const enforcer = await casbin.newEnforcer(
-		path.join(__dirname, "..", "models", "casbin-model.conf"),
-		adapter,
-	);
+	return casbin.newEnforcer(path.join(__dirname, "..", "models", "casbin-model.conf"), adapter);
+}
 
-	return enforcer;
-})();
+async function getCasbinEnforcer() {
+	if (!enforcerPromise) {
+		enforcerPromise = createCasbinEnforcer().catch(error => {
+			enforcerPromise = null;
+			throw error;
+		});
+	}
+
+	return enforcerPromise;
+}
+
+module.exports = {
+	getCasbinEnforcer,
+};

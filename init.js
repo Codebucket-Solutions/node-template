@@ -1,21 +1,23 @@
-const sequelize = require("./config/db");
+const { migrator } = require("./config/migrator");
 const { registerCronJobs } = require("./helper/cron");
 
-function initMaster() {
+async function initMaster() {
 	console.log("Master Initialization...");
 
-	return sequelize
-		.sync()
-		.then(() => {
-			console.log("Database connected");
+	try {
+		const result = await migrator({ command: "up", sync: true });
+		const executedCount = Array.isArray(result.executed) ? result.executed.length : 0;
 
-			registerCronJobs();
-			console.log("Cron jobs started");
-		})
-		.catch(err => {
-			console.error("❌ Database connection failed:", err.message);
-			throw err;
-		});
+		console.log(
+			`Database ready; synced models and applied ${executedCount} pending migration(s)`,
+		);
+
+		registerCronJobs();
+		console.log("Cron jobs started");
+	} catch (err) {
+		console.error("❌ Database initialization failed:", err.message);
+		throw err;
+	}
 }
 
 module.exports = initMaster;

@@ -1,8 +1,8 @@
 {
-	"generatedAt": "2026-03-14T20:49:00.852Z",
-	"score": 89,
-	"passed": 8,
-	"total": 9,
+	"generatedAt": "2026-03-16T18:27:14.279Z",
+	"score": 100,
+	"passed": 22,
+	"total": 22,
 	"checks": [
 		{
 			"name": "AGENTS.md",
@@ -10,6 +10,14 @@
 		},
 		{
 			"name": "docs/ARCHITECTURE.md",
+			"ok": true
+		},
+		{
+			"name": "docs/MIGRATIONS.md",
+			"ok": true
+		},
+		{
+			"name": "docs/OBSERVABILITY.md",
 			"ok": true
 		},
 		{
@@ -29,6 +37,26 @@
 			"ok": true
 		},
 		{
+			"name": "docs/design-docs/index.md",
+			"ok": true
+		},
+		{
+			"name": "docs/product-specs/index.md",
+			"ok": true
+		},
+		{
+			"name": "docs/exec-plans/tech-debt-tracker.md",
+			"ok": true
+		},
+		{
+			"name": "migrations/README.md",
+			"ok": true
+		},
+		{
+			"name": "docs/references/architecture-inventory.json",
+			"ok": true
+		},
+		{
 			"name": ".codex/config.toml",
 			"ok": true
 		},
@@ -37,8 +65,32 @@
 			"ok": true
 		},
 		{
+			"name": "scripts/smoke-server.js",
+			"ok": true
+		},
+		{
+			"name": "scripts/run-migrations.js",
+			"ok": true
+		},
+		{
+			"name": "scripts/new-migration.js",
+			"ok": true
+		},
+		{
+			"name": "scripts/query-observability.js",
+			"ok": true
+		},
+		{
+			"name": "test/health.test.js",
+			"ok": true
+		},
+		{
+			"name": "docker-compose.dev.yml",
+			"ok": true
+		},
+		{
 			"name": "CI workflow",
-			"ok": false
+			"ok": true
 		}
 	]
 }

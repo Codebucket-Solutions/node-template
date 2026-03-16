@@ -23,14 +23,15 @@ const kebabCaseFilenamesPlugin = {
 
 						const extension = path.extname(filename);
 						const basename = path.basename(filename, extension);
-						const isKebabCase = /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(basename);
+						const normalizedBasename = basename.replace(/\.(test|spec)$/, "");
+						const isKebabCase = /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(normalizedBasename);
 
 						if (!isKebabCase) {
 							context.report({
 								node,
 								message: "Filename '{{name}}' should be kebab-case.",
 								data: {
-									name: basename,
+									name: normalizedBasename,
 								},
 							});
 						}
@@ -50,10 +51,10 @@ module.exports = [
 			"build/**",
 			"**/*.min.js",
 			".husky/**",
-			"models/**",
+			"models/*.js",
+			"!models/init-models.js",
+			"!models/models.js",
 			"middleware/validator.js",
-			"middleware/dispatcher.js",
-			"eslint.config.js",
 			"utils/time.js",
 		],
 	},
@@ -96,7 +97,7 @@ module.exports = [
 			"prefer-const": "error",
 			"no-var": "error",
 			"object-shorthand": "error",
-			"quote-props": ["error", "as-needed"],
+			"quote-props": ["error", "consistent"],
 			"prefer-template": "error",
 			"prefer-arrow-callback": "error",
 			"no-param-reassign": [
@@ -114,6 +115,25 @@ module.exports = [
 			// Naming Conventions
 			"filenames-simple/naming-convention": "error",
 			"semi": ["error", "always"],
+		},
+	},
+	{
+		files: ["eslint.config.js"],
+		rules: {
+			"filenames-simple/naming-convention": "off",
+		},
+	},
+	{
+		files: ["test/**/*.js"],
+		languageOptions: {
+			globals: {
+				describe: "readonly",
+				it: "readonly",
+				before: "readonly",
+				after: "readonly",
+				beforeEach: "readonly",
+				afterEach: "readonly",
+			},
 		},
 	},
 ];

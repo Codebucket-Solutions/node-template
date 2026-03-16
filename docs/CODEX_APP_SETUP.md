@@ -15,32 +15,56 @@ npm ci || npm install
 npm run worktree:bootstrap
 ```
 
-OpenAI documents that local environments can define setup steps for worktrees and common project actions, and that this configuration is stored inside the `.codex` folder at the repo root. citeturn337372search0turn993475view0turn993475view1
-
 ## 3. Add project actions
 
 Recommended actions:
 
 - Verify -> `npm run verify`
+- Migrate -> `npm run migrate`
+- Migration status -> `npm run migrate:status`
+- Test -> `npm run test`
+- Smoke test -> `npm run test:smoke`
 - Start dev server -> `npm run start:dev`
+- Dev stack up -> `npm run dev:stack:up`
+- Dev stack down -> `npm run dev:stack:down`
+- Architecture inventory -> `npm run architecture:inventory`
 - Validate docs -> `npm run docs:validate`
 - Score quality -> `npm run quality:score`
 - New plan -> `npm run plan:new -- --slug=<slug> --title="<title>"`
 
-The Codex app exposes actions in the top bar and runs them in the integrated terminal. citeturn993475view0
-
 ## 4. Use worktrees for isolated tasks
-
-Codex app supports independent worktrees so multiple tasks do not interfere with each other. citeturn337372search2
 
 Suggested pattern:
 
 ```sh
-git worktree add ../wt-task-name -b task/name
+git worktree add ../wt-task-name -b feature/task-name
 cd ../wt-task-name
 npm run worktree:bootstrap
+npm run dev:stack:up
 ```
 
 ## 5. Use AGENTS.md as the entry point
 
-Codex reads `AGENTS.md` files before doing work, so keep high-level guidance there and detailed guidance in `docs/`. citeturn337372search1
+Keep high-level guidance in `AGENTS.md` and detailed guidance in `docs/`.
+
+## 6. Use the local observability harness when tasks need runtime feedback
+
+For backend tasks that need logs, metrics, or traces:
+
+```sh
+npm run dev:stack:up
+npm run obs:query -- metrics "up"
+```
+
+Detailed setup lives in [`docs/OBSERVABILITY.md`](./OBSERVABILITY.md).
+
+## 7. Use migration scripts for schema changes
+
+For database schema changes:
+
+```sh
+npm run migration:new -- --name=add-example-column
+npm run migrate
+```
+
+Repository guidance lives in [`docs/MIGRATIONS.md`](./MIGRATIONS.md). Do not add a parallel migration tool or alternate schema-change workflow.

@@ -6,11 +6,32 @@ setup = "npm ci || npm install\nnpm run worktree:bootstrap"
 [actions.verify]
 command = "npm run verify"
 
+[actions.migrate]
+command = "npm run migrate"
+
+[actions.migrate_status]
+command = "npm run migrate:status"
+
+[actions.test]
+command = "npm run test"
+
+[actions.test_smoke]
+command = "npm run test:smoke"
+
 [actions.start_dev]
 command = "npm run start:dev"
 
+[actions.dev_stack_up]
+command = "npm run dev:stack:up"
+
+[actions.dev_stack_down]
+command = "npm run dev:stack:down"
+
 [actions.docs_validate]
 command = "npm run docs:validate"
+
+[actions.architecture_inventory]
+command = "npm run architecture:inventory"
 
 [actions.quality_score]
 command = "npm run quality:score"

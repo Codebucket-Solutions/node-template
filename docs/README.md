@@ -34,6 +34,10 @@ Guide for building offset and cursor pagination with `pagi-help/v2` through the 
 
 Guide for the package-backed uploads, SMS, mail, PDF, and pagination patterns that the template expects contributors to reuse.
 
+### [Migrations](./MIGRATIONS.md)
+
+Runner, generator, and repository guidance for persistent schema changes.
+
 ### [Architecture](./ARCHITECTURE.md)
 
 Repository architecture plus the additive harness-engineering layer for Codex.
@@ -54,15 +58,19 @@ Repository and Codex operating constraints for safer changes.
 
 Deterministic setup and operational guidance for worktrees and CI.
 
+### [Observability](./OBSERVABILITY.md)
+
+Local OTLP, logs, metrics, traces, and query workflows for backend development.
+
 ### [Codex App Setup](./CODEX_APP_SETUP.md)
 
 Instructions for configuring Codex app local environments and project actions.
 
-### [OpenTelemetry Stub](./opentelemetry.md)
+### [OpenTelemetry Bootstrap](./opentelemetry.md)
 
-Overview of the disabled-by-default OpenTelemetry bootstrap hook and how to replace it with a real SDK configuration.
+Overview of the OpenTelemetry bootstrap hook and how it connects to the local observability stack.
 
-## Coming Soon
+## Additional Docs
 
 Additional documentation will be added for:
 
@@ -79,4 +87,6 @@ Additional documentation will be added for:
 
 For general overview and quick start, see the main [README](../README.md).
 
-- `SYMPHONY_SETUP.md`: how to use this template with OpenAI Symphony.
+Also available:
+
+- [Symphony Setup](./SYMPHONY_SETUP.md)

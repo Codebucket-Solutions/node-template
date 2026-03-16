@@ -1,4 +1,4 @@
-const { statusCodes, ErrorHandler, casbinEnforcer } = require("../helper");
+const { statusCodes, ErrorHandler, getCasbinEnforcer } = require("../helper");
 const { constant, camelize } = require("../utils");
 
 const { OK, UNAUTHORIZED } = statusCodes;
@@ -22,7 +22,7 @@ const dispatcher = async (req, res, next, func, resource, perm) => {
 	try {
 		const { user, body } = req;
 
-		const enforcer = await casbinEnforcer;
+		const enforcer = await getCasbinEnforcer();
 		if (perm) {
 			const checkPerm = await enforcer.enforce(
 				String(user.userId),
@@ -31,16 +31,19 @@ const dispatcher = async (req, res, next, func, resource, perm) => {
 				user.role,
 			);
 
-			if (!checkPerm) throw new ErrorHandler(UNAUTHORIZED, "Unauthorized");
+			if (!checkPerm) {
+				throw new ErrorHandler(UNAUTHORIZED, "Unauthorized");
+			}
 		} else if (body.programCode) {
 			const permissions = await enforcer.getImplicitPermissionsForUser(`${user.userId}`);
-			const hasAccess = permissions.some(([sub, obj, act]) => obj === body.programCode);
+			const hasAccess = permissions.some(([_sub, obj, _act]) => obj === body.programCode);
 
-			if (user.role !== "Admin" && !hasAccess)
+			if (user.role !== "Admin" && !hasAccess) {
 				throw new ErrorHandler(UNAUTHORIZED, "Unauthorized");
+			}
 		}
 		const data = await func(req, res, next);
-		if (data != null) {
+		if (data !== null) {
 			if (req.body && req.body.export) {
 				if (data.data) {
 					return res.xls(

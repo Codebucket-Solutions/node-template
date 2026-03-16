@@ -19,6 +19,8 @@ This repository is a Node.js backend template maintained for human developers an
 - Before adding backend behavior, inspect and extend the existing bootstrap and request path first:
   `bin/www` -> `init.js` -> `app.js` -> `middleware/` -> `routes/` -> `controllers/` -> `service/` -> `db/`.
 - Do not introduce alternate startup flows, duplicate middleware stacks, or temporary persistence layers when the template already has a place for the behavior.
+- For persistent schema changes, add a migration under `migrations/` with `npm run migration:new -- --name=<slug>` and use the migration runner scripts. Do not rely on ad hoc database edits or only `sequelize.sync()` for long-term schema evolution.
+- For migration work, use the existing repository structure only: `migrations/`, `scripts/new-migration.js`, `scripts/run-migrations.js`, `config/migrator.js`, and the master-startup path in `init.js`. Do not invent alternate migration folders, custom runners, new metadata tables, ORM-specific parallel migration systems, or one-off startup processes unless the task explicitly requires replacing the canonical flow.
 - Read a file before changing it.
 - Create or update an execution plan before starting any non-trivial work.
 - Keep the execution plan current while implementing the task.
@@ -40,6 +42,7 @@ A task is complete only when:
 - Active execution plans: `docs/exec-plans/active/`
 - Completed execution plans: `docs/exec-plans/completed/`
 - Codex project config: `.codex/`
+- Database migrations: `migrations/`
 - Worktree/bootstrap helpers: `scripts/`
 
 ## Command preferences
@@ -47,6 +50,8 @@ A task is complete only when:
 - Use `npm run verify` for the standard local verification flow.
 - Use `npm run worktree:bootstrap` in new worktrees.
 - Use `npm run plan:new -- --slug=<slug> --title="<title>"` to create a new execution plan.
+- Use `npm run migration:new -- --name=<slug>` to scaffold schema changes.
+- Use `npm run migrate` and `npm run migrate:status` to apply or inspect migrations.
 
 ## Constraints
 
@@ -72,3 +77,4 @@ A task is complete only when:
 - Check `routes/v1/examples/`, `controllers/v1/examples/`, and
   `service/v1/examples/` before implementing these behaviors elsewhere. Extend
   those patterns instead of creating parallel ones.
+- Use the built-in migration flow for schema changes. Do not add Sequelize CLI migrations, Knex migrations, Prisma migrations, raw SQL runner directories, or custom schema-version scripts alongside the existing Umzug-based process.
