@@ -10,9 +10,10 @@ Process bootstrap -> Environment loading -> Optional instrumentation -> Request 
 
 ## Harness-engineering overlay
 
-The repository also includes a repo-native operating layer designed for Codex and other coding agents:
+The repository also includes a repo-native operating layer designed for AI coding agents (Codex, Claude Code, and others):
 
-- `AGENTS.md`: short operational contract for agents.
+- `AGENTS.md`: short operational contract for all agents.
+- `CLAUDE.md`: project instructions for Claude Code.
 - `docs/`: versioned system of record for architecture, workflow, quality, reliability, and security.
 - `docs/MIGRATIONS.md`: canonical schema-change workflow for downstream projects.
 - `docs/OBSERVABILITY.md`: local logs, metrics, traces, and query workflows.
@@ -37,4 +38,4 @@ Application code and repo operations are separate concerns:
 - Stateful business workflows can be implemented in `service/v1/` with Sequelize models backing assignment, workflow action, and escalation rules.
 - Agent operating guidance lives in repo-root docs and scripts.
 
-This keeps the backend template usable for normal development while making the repository legible to Codex.
+This keeps the backend template usable for normal development while making the repository legible to AI coding agents.

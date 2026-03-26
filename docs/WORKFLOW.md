@@ -23,6 +23,18 @@
 9. Use `npm run migration:new -- --name=<slug>` for schema changes. Master startup bootstraps models and applies pending migrations through the built-in migrator only when the DB target matches the expected worktree-local stack or `ALLOW_NON_LOCAL_STARTUP_DB_BOOTSTRAP=true` is set for an intentional deployment-style environment. For local non-DB tasks, agents may temporarily use `SKIP_STARTUP_MIGRATIONS=true` to bypass the startup bootstrap path. Do not add a second migration tool or alternate startup path.
 10. Run `npm run verify` before review or merge.
 
+## Claude Code workflow
+
+1. Open the repo directory in Claude Code (`claude` CLI).
+2. Claude Code reads `CLAUDE.md` automatically for project-specific instructions.
+3. For isolated work, use Claude Code's built-in worktree support or create one manually.
+4. Run `npm run worktree:bootstrap` in each new worktree.
+5. Use `npm run dev:stack:up` when the task needs local DB, Redis, or observability services.
+6. Run `npm run claim:check` and use active execution plans in `docs/exec-plans/active/` for medium or large tasks. Respect any existing claim that overlaps your intended scope.
+7. Use `npm run migration:new -- --name=<slug>` for schema changes. The same DB guard and migration rules from the Codex workflow apply.
+8. Run `npm run verify` before declaring work done.
+9. Use `/commit` to commit changes following project conventions.
+
 ## Worktree workflow
 
 ```sh
