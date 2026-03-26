@@ -1,6 +1,6 @@
 # AGENTS.md
 
-This repository is a Node.js backend template maintained for human developers and Codex.
+This repository is a Node.js backend template maintained for human developers and AI coding agents (Codex, Claude Code, Cursor, and others).
 
 ## Read this first
 
@@ -45,6 +45,7 @@ A task is complete only when:
 - Active execution plans: `docs/exec-plans/active/`
 - Completed execution plans: `docs/exec-plans/completed/`
 - Codex project config: `.codex/`
+- Claude Code project config: `CLAUDE.md`
 - Database migrations: `migrations/`
 - Worktree/bootstrap helpers: `scripts/`
 
