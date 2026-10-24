@@ -1,4 +1,4 @@
-const { v4: uuidv4 } = require("uuid");
+const { randomUUID } = require("crypto");
 const logger = require("../utils/logger");
 const requestLogger = require("pino-http")({
 	// Reuse an existing logger instance
@@ -10,7 +10,7 @@ const requestLogger = require("pino-http")({
 		if (existingID) {
 			return existingID;
 		}
-		const id = uuidv4();
+		const id = randomUUID();
 		res.setHeader("X-Request-Id", id);
 		return id;
 	},

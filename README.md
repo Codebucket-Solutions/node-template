@@ -40,7 +40,7 @@ npm run plan:new -- --slug=my-task --title="My Task"
 
 ### Prerequisites
 
-- Node.js 16+ (Node 20+ recommended)
+- Node.js 24+ (the Docker image uses 24.22.1, which has the October 2026 security fixes)
 - MySQL 5.7+
 - Redis (for production rate limiting)
 
@@ -292,11 +292,8 @@ Multi-core support using Node.js cluster module for improved performance and sca
 # Development (with auto-reload)
 npm run start:dev
 
-# Production (Node 20+)
+# Production (Node 24+)
 npm start
-
-# Production (Node 16)
-npm run start:16
 
 # Code generation
 npm run plop
@@ -472,19 +469,18 @@ module.exports = router;
 
 ```bash
 docker build -t node-template .
-docker run -p 3000:3000 --env-file .env.production node-template
+docker run -p 8080:8080 --env-file .env.production node-template
 ```
 
-### Docker Compose
-
-```bash
-docker-compose up -d
-```
+Deployments run on Kubernetes (through Engineering Fabric); there is no Docker Compose deployment. The app listens on
+`PORT` (8080 by default) and forks one worker per CPU of the container's limit (`WEB_CONCURRENCY` overrides it; one
+worker when the container has no limit), never one per CPU of the host.
 
 **Production Setup:**
 
-- Uses internal registry: `harbor.internal.codebuckets.in`
+- Base image: `node:24.22.1-slim`
 - NPM registry: `https://npm.internal.codebuckets.in`
+- Environment variables come from the deployment (Kubernetes secrets); Azure Key Vault (`@codebucket/azure-env`) is no longer used
 
 ---
 
