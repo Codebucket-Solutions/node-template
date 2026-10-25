@@ -8,7 +8,7 @@ loadEnvironment(process.env.NODE_ENV);
  * Module dependencies.
  */
 const cluster = require("cluster");
-const cpu = require("os").cpus().length;
+const { workerCount } = require("../config/cpu-count");
 const debug = require("debug")("sidebrain:server");
 const http = require("http");
 const { startOpenTelemetry, shutdownOpenTelemetry } = require("../instrumentation/opentelemetry");
@@ -27,11 +27,10 @@ async function runMaster() {
 	await initMaster();
 	console.log("Master-only services initialized");
 
+	// WEB_CONCURRENCY, else the container's CPU limit (never the host's CPU count); one worker in stage and development
 	const workers =
 		process.env.WEB_CONCURRENCY ??
-		(process.env.NODE_ENV === "stage" || process.env.NODE_ENV === "development"
-			? 1
-			: Math.max(1, cpu));
+		(process.env.NODE_ENV === "stage" || process.env.NODE_ENV === "development" ? 1 : workerCount());
 
 	for (let i = 0; i < Number(workers); i++) {
 		console.log("Forking worker", i + 1, "of", Number(workers));
